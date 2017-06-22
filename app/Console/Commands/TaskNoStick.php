@@ -43,9 +43,18 @@ class TaskNoStick extends Command
     public function handle()
     {
         $stick_day = 3;
-        //查询当前时间超过置顶时间的任务
+
+        /*//查询当前时间超过置顶时间的任务
         $stickOffTask = TaskModel::where('begin_at','>',date('Y-m-d H:i:s',time()-strtotime($stick_day.' day')))->where('top_status',1)->lists('id');
         //处理当前的置顶为不置顶
-        TaskModel::whereIn('id',$stickOffTask)->update(['top_status'=>0]);
+        TaskModel::whereIn('id',$stickOffTask)->update(['top_status'=>0]);*/
+        /**
+         * 我觉着上面的写法不太对啊
+         *
+         * 换成我下面的这条试一试
+         * */
+        TaskModel::where('top_status',1)
+            ->where('begin_at','<=', date('Y-m-d H:i:s',time() - $stick_day*24*3600))
+            ->update(['top_status' => 0]);
     }
 }

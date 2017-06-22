@@ -155,6 +155,8 @@ class WorkModel extends Model
                 }
 
             }
+
+            
         });
         
         if(is_null($status))

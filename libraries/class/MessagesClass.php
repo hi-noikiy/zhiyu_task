@@ -102,7 +102,7 @@ class MessagesClass
             $siteName = $siteArr['site_name'];
             $title = $siteName.'找回密码';
         }else{
-            $title = '客客威客系统找回密码';
+            $title = '职鱼系统找回密码';
         }
 
         $data = array(

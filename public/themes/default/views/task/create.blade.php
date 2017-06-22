@@ -246,40 +246,42 @@
                                     </div>
                                 </div>
                             </li>
-                            <li>
-                                <a class="task-tit" href="javascript:;" data-toggle="collapse" data-target="#demor">
-                                    <span class="ace-icon fa fa-angle-double-{{ (!empty(old('product')))?'down':'right' }}" data-icon-hide="ace-icon fa fa-angle-double-down" data-icon-show="ace-icon fa fa fa-angle-double-right"></span> 增值服务
-                                </a>
-                                <div id="demor" class="collapse {{ (!empty(old('product')))?'in':'' }}">
-                                    <ul class="vat">
-                                        @foreach($service as $v)
-                                            <li class="clearfix">
-                                                <div class="pull-left">
-                                                    <div class="checkbox pull-left">
-                                                        <label>
-                                                            <input type="checkbox" name="product[]" {{ (!empty(old('product')) && in_array($v['id'],old('product')))?'checked':'' }} class="taskservice" price="{{ $v['price'] }}" value={{ $v['id'] }}><span>{{ substr($v['title'],3,3) }}</span>
-                                                        </label>
-                                                    </div>
+                            @if(count($service))
+                                <li>
+                                    <a class="task-tit" href="javascript:;" data-toggle="collapse" data-target="#demor">
+                                        <span class="ace-icon fa fa-angle-double-{{ (!empty(old('product')))?'down':'right' }}" data-icon-hide="ace-icon fa fa-angle-double-down" data-icon-show="ace-icon fa fa fa-angle-double-right"></span> 增值服务
+                                    </a>
+                                    <div id="demor" class="collapse {{ (!empty(old('product')))?'in':'' }}">
+                                        <ul class="vat">
+                                            @foreach($service as $v)
+                                                <li class="clearfix">
                                                     <div class="pull-left">
-                                                        <p class="text-size14 cor-gray51">{{ $v['title'] }}</p>
-                                                        <p class="p-space cor-gray89">{{ $v['description'] }}</p>
+                                                        <div class="checkbox pull-left">
+                                                            <label>
+                                                                <input type="checkbox" name="product[]" {{ (!empty(old('product')) && in_array($v['id'],old('product')))?'checked':'' }} class="taskservice" price="{{ $v['price'] }}" value={{ $v['id'] }}><span>{{ substr($v['title'],3,3) }}</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="pull-left">
+                                                            <p class="text-size14 cor-gray51">{{ $v['title'] }}</p>
+                                                            <p class="p-space cor-gray89">{{ $v['description'] }}</p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="pull-right vat-txt">
-                                                    ￥{{ $v['price'] }}
+                                                    <div class="pull-right vat-txt">
+                                                        ￥{{ $v['price'] }}
+                                                    </div>
+                                                </li>
+                                            @endforeach
+                                            <li class="clearfix">
+                                                <div class="checkbox pull-left">
+                                                    <label>
+                                                        <input type="checkbox" id="taskservice_all"><span class="vat-check" >全选</span>
+                                                    </label>
                                                 </div>
                                             </li>
-                                        @endforeach
-                                        <li class="clearfix">
-                                            <div class="checkbox pull-left">
-                                                <label>
-                                                    <input type="checkbox" id="taskservice_all"><span class="vat-check" >全选</span>
-                                                </label>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            @endif
                         </ul>
                     </div>
                     <div class="task-bt">

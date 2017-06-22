@@ -247,7 +247,7 @@ class DetailController extends IndexController
         return $this->theme->scope('task.work', $view)->render();
     }
     /**
-     *竞标投稿
+     *竞标投稿 form post 表单提交投稿
      * @param Request $request
      */
     public function workCreate(WorkRequest $request)
@@ -256,7 +256,6 @@ class DetailController extends IndexController
         $data['desc'] = \CommonClass::removeXss($data['desc']);
         $data['uid'] = $this->user['id'];
         $data['created_at'] = date('Y-m-d H:i:s',time());
-
 
         //判断当前用户是否有资格投标
         $is_work_able = $this->isWorkAble($data['task_id']);

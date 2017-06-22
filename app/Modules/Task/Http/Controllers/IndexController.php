@@ -190,7 +190,7 @@ class IndexController extends BasicIndexController
         //查询任务模板
         $templet_cate = ['设计', '文案', '开发', '装修', '营销', '商务', '生活'];
         $templet = TaskTemplateModel::all();
-        $rewardModel = TaskTypeModel::where('alias','xuanshang')->first();
+        $rewardModel = TaskTypeModel::where('alias','toupiao')->first();
         //获取客服电话
         $phone = \CommonClass::getConfig('phone');
         $qq = \CommonClass::getConfig('qq');
@@ -276,6 +276,7 @@ class IndexController extends BasicIndexController
             return redirect()->back()->with('error', '数据过期，请重新预览！');
         }
 
+
         $user_detail = UserDetailModel::where('uid', $data['uid'])->first();
         $task_cate = TaskCateModel::where('id',$data['cate_id'])->first();
         $attatchment = array();
@@ -344,7 +345,6 @@ class IndexController extends BasicIndexController
         $this->theme->setTitle('赏金托管');
         //查询用户发布的数据
         $task = TaskModel::findById($id);
-
         //判断用户所要支付的是否是自己的任务和任务是否已经支付
         if ($task['uid'] != $this->user['id'] || $task['status'] >= 2) {
             return redirect()->back()->with(['error' => '非法操作！']);

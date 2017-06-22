@@ -16,8 +16,13 @@
                             <p>您本次修改支付密码的验证码为：<span style="color: #ed8b31;">{{ $data['code'] }}</span></p>
                             <p>本验证码5分钟内有效。</p>
                             <div style="margin: 45px 0;">
-                                <p>非常感谢您查收@if(Theme::get('site_config')['site_name']){!! Theme::get('site_config')['site_name'] !!}
-                                    @else 职鱼 @endif团队的邮件</p>
+                                <p>非常感谢您查收
+                                    @if(Theme::has('site_config') && Theme::get('site_config')['site_name'])
+                                        {!! Theme::get('site_config')['site_name'] !!}
+                                    @else
+                                        职鱼
+                                    @endif
+                                    团队的邮件</p>
                                 <p>如果您有任何问题，请联系我们，我们会尽快回复</p>
                             </div>
                             <p>Email:hi@kppw.cn</p>

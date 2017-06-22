@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Modules\Task\Model\TaskModel;
 use App\Test;
 use App\User;
 use Illuminate\Http\Request;

@@ -290,7 +290,7 @@ class AuthController extends IndexController
         $clientSecret = $oauthConfig['appSecret'];
         $redirectUrl = url('oauth/' . $type . '/callback');
         $config = new \SocialiteProviders\Manager\Config($clientId, $clientSecret, $redirectUrl);
-        return Socialite::with($type)->setConfig($config)->redirect();
+        return Socialite::with($type)->setConfig($config)->rediirect();
     }
 
     /**

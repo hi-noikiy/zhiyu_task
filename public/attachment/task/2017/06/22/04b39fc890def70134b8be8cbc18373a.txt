@@ -1,0 +1,229 @@
+
+服务器地址链接：
+211.149.225.234
+22000
+root
+2ph2h2c2
+
+
+
+Git 教程地址
+http://blog.jobbole.com/78960/     
+
+网站git地址
+https://github.com/appdevs-cn/yjob-www.git
+
+廖雪峰git教程
+http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000
+
+短信平台：
+http://www.74cms.com/sms/
+
+yjobnet
+zzd872dz
+
+
+远程服务管理域名：
+http://211.149.225.234:9527/
+
+
+
+企业管理后台主页：
+http://www.yjob.net/user/company/company_index.php
+
+登录入口：
+http://www.yjob.net/user/login.php
+
+
+获取我的access_token 
+https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx65a4d7268dc327c0&secret=65523f276c23d31d12d2be386ee81435
+
+
+https://api.weixin.qq.com/cgi-bin/menu/create?access_token=hcB0tvLGjBW5isFMZb1iCwqyCGeIsyoUCN-Lsk5_s6EJq9L8c1roSeJ9FX5l8nQL4Ql6MwqJSbcjw9kdM9YFqzBCfSAEOgZAYQuNDDmiDdabdrSIOXQTXqcR83ESA4o_TUYeADAFGK
+
+
+激活地带 服务号：
+250289318@qq.com
+jihuo2013
+原始id：weixin://profile/gh_8ddcd9543606
+appid: wx32245a3f15a7c46f
+appkey: ddbfd44967db67df0a6018f10ce099bc
+旧平台公众号服务器地址：
+http://www.yjob.net/plus/weixin.php
+
+
+
+商户平台：
+1331689901
+jihuo2013
+秘钥：
+
+
+
+激活地带的access_token
+https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx32245a3f15a7c46f&secret=25447149f984f25b5d11d99050ac626e
+
+
+职鱼订阅号：
+wxd2ed6e44c3ade9cb
+c159f7af6302ff6ed50375c1b40d71da
+
+职鱼的access_token
+https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxd2ed6e44c3ade9cb&secret=c159f7af6302ff6ed50375c1b40d71da
+马梓达openId：onTfUsnORa4E6rwkE2uMGx02oR0I
+http://1.mzdwx.applinzi.com/
+weixin
+
+马梓达的 unionid
+oyiF3wX94wBkiJGB9maSA2oI9lZo
+
+
+
+电脑的环境变量
+D:\XAPM\mysql\bin;D:\XAPM\php\ext\;C:\Users\Admin-PC\AppData\Roaming\Composer\vendor\bin
+				
+http://www.yjob.net/m/personal/user.php?act=work_card&id=278
+
+
+http://1.mzdwx.applinzi.com/
+
+
+
+
+act=leaveEarly&eid=338&status=100
+http://www.yjob.net/m/personal/user.php?act=signOut_manage&id=101&oneid=303
+http://www.yjob.net/m/personal/user.php?act=signOut_manage&id=101&type=200&rewrite=work_manage&rewrite_id=303
+
+39.973022
+116.318841
+
+
+
+
+
+用户中心，绑定 tp框架
+自己的账号测试
+公司内部服务器自己搭建
+
+
+
+
+
+
+header("Location:http://192.168.1.107/1_NEW_project/new_system?m=home&c=wechat&a=we_chat_bind&openid=".$openId."&nick_name=".$nickName);
+
+
+https://open.weixin.qq.com/connect/qrconnect?appid=wxc4f02ed5d185d6b1&redirect_uri=https%3A%2F%2Fu.panda.tv%2Foauth_callback%3Furl%3Dhttp%253A%252F%252Fwww.panda.tv%252Frucbind%253Fhref%253Dhttp%253A%252F%252Fwww.panda.tv%252F%26jp%3D%26__plat%3Dpc_web%26__guid%3D96554777.3148370614601743400.1483943702283.3447%26psrc%3D%26ip%3D124.200.0.239%26refer%3D%26pdft%3D%26pdftsrc%3D%26__version%3D%26type%3D3%26csrfstate%3D166b47553930a38f3275e3d20c3a1050%26rk%3D980d5a7e61e939f84fc763e29b479d1c&response_type=code&scope=snsapi_login
+
+
+http://mcis666.imwork.net/company/operation/get_sae_code
+
+
+
+
+
+马梓达微博登录开发信息：
+App Key：3104985344
+App Sercet：0a70c11ca9a16a2b5d2749b5b7d75283
+
+
+
+
+
+马梓达QQ登录开发信息：
+APP ID：1105944226
+APP KEY：ghsAufytbypGCdHF
+
+
+
+云兼职第三方app key
+==新浪==
+jihuodidai@sina.com
+A1234cm5678a
+
+App Key：3053352799
+App Secret：9eb52d4f90e911aab40b60abace0e80d
+==腾讯==
+2372764587@qq.com
+pppp4444
+京ICP备13020119号-1
+
+
+
+====七牛=====
+w@yjob.net
+zln112233
+
+测试版 微信开放平台
+openwechat@yjob.net
+jihuo2013
+AppID: wxfb4c1f5760eea399
+AppSecret：599f20642f365ce2ed748f4948a70119
+
+
+
+======短信10086====
+yjob
+aabZZ2222
+
+
+
+
+
+
+<header>
+        <if condition="$openid"><input type="hidden" id="wechat_hongbao" value="{$openid}"></if>
+        <input type="hidden" id="requestRedId">
+        <div id="return" class="return">
+            <i></i>
+        </div>
+        定时红包
+    </header>
+
+
+
+
+
+
+
+
+211.149.237.144
+
+
+ssh端口:22000
+
+
+初始用户名:	root
+初始密码:	4satt2ys
+
+内网IP地址:	192.168.237.144
+
+
+
+
+mysql
+
+
+管理员：
+root
+KK234Z2@
+
+
+
+
+
+API数据库
+
+apidb
+apidber
+
+
+ASD23ZZ@x
+
+
+
+清空删除 redis redis-cli keys * | xargs redis-cli del
+
+tail -f XXX  实时监测打印
+
+

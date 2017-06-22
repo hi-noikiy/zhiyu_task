@@ -45,14 +45,13 @@ class TaskWork extends Command
         //查询正在进行投稿的任务
         $tasks = TaskModel::where('status','=',3)->orWhere('status','=',4)->get()->toArray();
 
-        //查询系统设定的时间规则筛选筛选出交稿时间到期的任务
+        //查询系统设定的时间规则筛选出 交稿时间到期 的任务（的id array）
         $expireTasks = self::expireTasks($tasks);
 
         //将任务分为两组一组是有稿件的，一组是没有稿件的
         $works = WorkModel::whereIn('task_id',$expireTasks)->lists('task_id')->toArray();
         $worked = array_unique($works);
         $not_worked = array_diff($expireTasks,$worked);
-
         //没有稿件的任务直接失败，赏金退还
         foreach($not_worked as $v){
             $status = DB::transaction(function() use($v){

@@ -29,10 +29,10 @@ class Inspire extends Command
     public function handle()
     {
         //发送邮件给372980503@qq.com
-//        $user = [
-//            'name'=>'sss',
-//            'email'=>'863011965@qq.com'
-//        ];
-//        \MessagesClass::sendCodeEmail($user);
+        /*$user = [
+            'name'=>'sss',
+            'email'=>'machuang2264@163.com'
+        ];
+        \MessagesClass::sendCodeEmail($user);*/
     }
 }
