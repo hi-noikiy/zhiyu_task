@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="9950fde3-5fac-4f86-88ef-4d588ec3ecf8" name="211.149.225.234任务系统" url="http://211.149.225.234">
+        <fileTransfer host="211.149.225.234" port="22000" rootFolder="/home/wwwroot/mcapi/public_html/avnApi/KPPW" accessType="SFTP" password="df98dfdadfc2df98dfc2df98dfc9df98" username="root">
+          <advancedOptions>
+            <advancedOptions controlEncoding="UTF-8" dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22000" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

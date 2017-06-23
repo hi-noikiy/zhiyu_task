@@ -227,7 +227,10 @@ class TaskController extends ManageController
                 break;
         }
 
-        $status = TaskModel::whereIn('id', $request->get('ckb'))->where('status', 1)->orWhere('status', 2)->update(array('status' => $status));
+        $status = TaskModel::whereIn('id', $request->get('ckb'))
+            ->where('status', 1)
+            ->orWhere('status', 2)
+            ->update(array('status' => $status));
         if ($status)
             return back();
 
@@ -354,11 +357,7 @@ class TaskController extends ManageController
     public function taskMassageDelete($id)
     {
         $result = WorkCommentModel::destroy($id);
-
-        if(!$result)
-        {
-            return redirect()->to('/manage/taskList')->with(['error'=>'留言删除失败！']);
-        }
-        return redirect()->to('/manage/taskList')->with(['massage'=>'留言删除成功！']);
+        $message = $result ? ['massage'=>'留言删除成功！'] : ['error'=>'留言删除失败！'];
+        return redirect()->to('/manage/taskList')->with($message);
     }
 }

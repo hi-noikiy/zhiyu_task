@@ -31,8 +31,9 @@ class MessageTemplateModel extends Model
 
         
         $message = MessageTemplateModel::where('code_name',$codeName)->where('is_open',1)->where($sendWay,1)->first();
-        if($message['num'] > 0)
+        if($message['num'] > 0) // 模板中的变量个数
         {
+            // 替换模板中变量
             $rule = "/\{\{[\\w](.*?)\}\}/";
             preg_match_all($rule,$message['content'],$matches);
             $oldArr = empty($matches[0])?:array_unique($matches[0]);

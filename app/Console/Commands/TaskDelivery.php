@@ -181,11 +181,17 @@ class TaskDelivery extends Command
             if((strtotime($v['checked_at'])+$task_delivery_max_time)<=time())
             {
                 //查询当前的任务是否有交付的work
-                $query = WorkModel::where('task_id', $v['id']);
+                /*$query = WorkModel::where('task_id', $v['id']);
                 $query = $query->where(function ($query) {
                     $query->where('status', 3)->orWhere('status', 4)->orWhere('status',2);
                 });
-                $work = $query->count();
+                $work = $query->count();*/
+                $work = WorkModel::where('task_id', $v['id'])
+                    ->where('status', 3)
+                    ->orWhere('status', 4)
+                    ->orWhere('status',2)
+                    ->count();
+
                 if ($work == 0) {
                     $filled[] = $v;
                 } else {

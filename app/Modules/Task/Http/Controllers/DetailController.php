@@ -248,6 +248,11 @@ class DetailController extends IndexController
     }
     /**
      *竞标投稿 form post 表单提交投稿
+     * 功能：
+     *      创建一条投稿信息，若此任务为第一次投稿，则修改此任务的状态到 4 威客交稿
+     *      创建一条类型为交易动态的模板消息，用于推送给投稿人
+     *
+     *      理论上来说，投稿是无数量限制的，就是有 N 个人投递当前任务都是可以的，无论任务需求量是多少
      * @param Request $request
      */
     public function workCreate(WorkRequest $request)
@@ -264,7 +269,7 @@ class DetailController extends IndexController
         {
             return redirect()->back()->with('error',$is_work_able['errMsg']);
         }
-        //创建一个新的稿件
+        //创建一个新的稿件 如果为第一次的投稿，则修改当前任务的状态为 4 威客交稿
         $workModel = new WorkModel();
         $result = $workModel->workCreate($data);
 
@@ -329,7 +334,7 @@ class DetailController extends IndexController
             $data['worker_num'] = $worker_num[0];
             $data['win_bid_num'] = $win_bid_num;
             $workModel = new WorkModel();
-            $result = $workModel->winBid($data);
+            $result = $workModel->winBid($data); // 进行任务 投稿处理 返回处理结果
 
             if(!$result) return redirect()->back()->with(['error'=>'操作失败！']);
         }else{

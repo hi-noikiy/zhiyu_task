@@ -128,40 +128,36 @@ class WorkModel extends Model
         return is_null($status)?true:false;
     }
 
-    
+    /**
+     * 流程：
+     * @param array $data [任务id，投稿id，任务需求数量，投稿中标数量]
+     * 修改当前投稿人的投稿状态为中标状态
+     * 如果任务需求量 等于 中标数量，若有公示期，进入公示期或交付验收期
+     * 发送模板消息
+     *
+     * @return bool
+     * */
     public function winBid($data)
     {
         $status = DB::transaction(function() use($data){
             
             Self::where('id',$data['work_id'])->update(['status'=>1]);
-            
 
-
-
-
-
-            
             if(($data['win_bid_num']+1)== $data['worker_num'])
             {
-                
-                
-                
                 $task_publicity_day = \CommonClass::getConfig('task_publicity_day');
                 if($task_publicity_day==0)
                 {
-                    TaskModel::where('id',$data['task_id'])->update(['status'=>7,'publicity_at'=>date('Y-m-d H:i:s',time()),'checked_at'=>date('Y-m-d H:i:s',time())]);
+                    TaskModel::where('id',$data['task_id'])
+                        ->update(['status'=>7,'publicity_at'=>date('Y-m-d H:i:s',time()),'checked_at'=>date('Y-m-d H:i:s',time())]);
                 }else{
                     TaskModel::where('id',$data['task_id'])->update(['status'=>6,'publicity_at'=>date('Y-m-d H:i:s',time())]);
                 }
-
             }
-
-            
         });
         
         if(is_null($status))
         {
-            
             $task_win = MessageTemplateModel::where('code_name','task_win')->where('is_open',1)->where('is_on_site',1)->first();
             if($task_win)
             {
@@ -175,7 +171,7 @@ class WorkModel extends Model
                     'website'=>$site_name,
                     'task_number'=>$task['id'],
                     'task_title'=>$task['title'],
-                    'win_price'=>$task['bounty']/$task['worker_num'],
+                    'win_price'=>$task['bounty']/$task['worker_num'], // 总金额平分中标人数
                 ];
                 $message = MessageTemplateModel::sendMessage('task_win',$messageVariableArr);
                 $data = [
@@ -189,7 +185,7 @@ class WorkModel extends Model
                 MessageReceiveModel::create($data);
             }
         }
-        return is_null($status)?true:false;
+        return is_null($status) ? true : false;
     }
 
     
