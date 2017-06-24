@@ -84,6 +84,7 @@
                 @else
                 <img src="{!! Theme::asset()->url('images/news_pic_side.png') !!}" alt="">
                 @endif
+                @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                 <div class="release-form">
                     <div class="space-10"></div>
                     <b class="text-size16 cor-gray51">快速发布需求</b>
@@ -129,6 +130,7 @@
                     </div>
 
                 </div>
+                @endif
             </div>
             <!-- 最新动态 -->
             @if(count($hotlist))

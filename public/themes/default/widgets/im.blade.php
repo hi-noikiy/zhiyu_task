@@ -56,7 +56,7 @@
             <div class=" collapse in im-info imContact-info ">
                 <div class="im-side1-list1 clearfix">
                     <div class="pull-left">
-                        <img src="@if(!empty(Theme::get('avatar'))) {!!  url(Theme::get('avatar')) !!} @else {!! Theme::asset()->url('images/defaulthead.png') !!} @endif" alt="..." class="img-circle" width="63" height="63"/>
+                        <img src="@if(\Illuminate\Support\Facades\Session::has('AuthUserInfo'))  {{ env('AUATAR_URL') .  \Illuminate\Support\Facades\Session::get('AuthUserInfo.avatar_url')}} @else {!! Theme::asset()->url('images/defaulthead.png') !!} @endif" alt="..." class="img-circle" width="63" height="63"/>
                     </div>
                     <div class="im-side1-title">
                         <p class=" title-tit">

@@ -52,7 +52,7 @@ Route::group(['prefix' => 'task','middleware' => 'auth'], function() {
 	
 	Route::get('/imgupload','IndexController@imgupload')->name('imgupload');
 });
-Route::group(['prefix'=>'task'],function(){
+Route::group(['prefix'=>'task','middleware' => 'auth'],function(){
 
 
 	

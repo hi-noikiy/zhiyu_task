@@ -98,20 +98,22 @@
                             @endif
                         </div></div>
                     </div>
+                    @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                     <div class="pull-right g-tasknavbtn hidden-sm hidden-xs">
-                        {{--<button>发布需求</button>--}}
                         <a href="/task/create" class="u-ahref">发布需求</a>
                     </div>
+                    @endif
                     <div class="banner-r hidden-sm hidden-xs hidden-md">
                         <div class="tab-content tab-top">
                             <div class="clearfix">
-                                @if(Auth::check())
+
+                            @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo'))
                                         <!--登录后状态-->
                                 <div class="pull-left">
-                                    <img src="@if(!empty(Theme::get('avatar'))) {!!  url(Theme::get('avatar')) !!} @else {!! Theme::asset()->url('images/defauthead.png') !!}  @endif" height="70" width="70" class="img-responsive img-circle" alt="">
+                                    <img src="@if(\Illuminate\Support\Facades\Session::has('AuthUserInfo'))  {{ env('AUATAR_URL') .  \Illuminate\Support\Facades\Session::get('AuthUserInfo.avatar_url')}}  @else {!! Theme::asset()->url('images/defauthead.png') !!}  @endif" height="70" width="70" class="img-responsive img-circle" alt="">
                                 </div>
                                 <div class="p-mgl">
-                                    <p class="p-space">Hi,<span class="text-blod cor-gray51">{!! Auth::User()->name !!}</span></p>
+                                    <p class="p-space">Hi,<span class="text-blod cor-gray51"> {!! \Illuminate\Support\Facades\Session::get('AuthUserInfo.wx_nick') !!}</span></p>
                                     <p>您有新的消息</p>
                                     <div class="space-4"></div>
                                     <a href="/user/index" class="b-border btn-big1 home-usercenter">个人中心</a>
@@ -124,7 +126,7 @@
                                 <div class="p-mgl">
                                     <p>您还未登录</p>
                                     <p><a class="text-under" href="{!! url('login') !!}" >点击登录</a>，更多精彩</p>
-                                    <p><a class="text-under cor-gray8f" href="{!! url('register') !!}" >去注册»</a></p>
+                                    <p><a class="text-under cor-gray8f" href="{!! url('login') !!}" >去注册»</a></p>
                                 </div>
                                 @endif
                             </div>

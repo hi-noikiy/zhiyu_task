@@ -9,7 +9,7 @@ class LoginRequest extends FormRequest
 	public function rules()
 	{
 		return [
-            'username' => 'required|string',
+            'username' => 'required|integer',
             'password' => 'required|between:3,16|string',
             'code' => 'sometimes|required|alpha_num'
 		];
@@ -25,7 +25,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'username.required' => '请输入登录账号',
-            'username.string' => '请输入正确的账号格式',
+            'username.integer' => '请输入正确的账号格式',
             'password.required' => '请输入登录密码',
         ];
     }

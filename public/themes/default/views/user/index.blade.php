@@ -4,7 +4,7 @@
             <div class="focuside clearfix nodel">
             <div class="text-center col-md-4 col-sm-6 col-lg-12">
                 <div class="s-usercenterimg focusideimg profile-picture col-sm-6 col-lg-12">
-                    <img id="avatar" class='user-image editable img-responsive' src="@if(!empty(Theme::get('avatar'))) {!!  url(Theme::get('avatar')) !!} @else {!! Theme::asset()->url('images/default_avatar.png') !!} @endif"/>
+                    <img id="avatar" class='user-image editable img-responsive' src="@if(\Illuminate\Support\Facades\Session::has('AuthUserInfo'))  {{ env('AUATAR_URL') .  \Illuminate\Support\Facades\Session::get('AuthUserInfo.avatar_url')}} @else {!! Theme::asset()->url('images/default_avatar.png') !!} @endif"/>
                 </div>
                 <div class="col-sm-6 col-lg-12">
                     <div class="space-8"></div>

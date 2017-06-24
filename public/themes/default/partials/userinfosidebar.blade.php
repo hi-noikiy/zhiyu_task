@@ -1,7 +1,7 @@
 
 <div class="text-center">
     <div class="s-usercenterimg focusideimg profile-picture ">
-        <img id="avatar" class="user-image editable img-responsive img-circle" src="@if(!empty(Theme::get('avatar'))) {!!  url(Theme::get('avatar')) !!} @else {!! Theme::asset()->url('images/default_avatar.png') !!} @endif"  />
+        <img id="avatar" class="user-image editable img-responsive img-circle" src="@if(\Illuminate\Support\Facades\Session::has('AuthUserInfo'))  {{ env('AUATAR_URL') .  \Illuminate\Support\Facades\Session::get('AuthUserInfo.avatar_url')}} @else {!! Theme::asset()->url('images/default_avatar.png') !!} @endif"  />
     </div>
     <div class="space-8">
 

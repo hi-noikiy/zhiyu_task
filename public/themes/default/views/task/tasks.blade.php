@@ -233,6 +233,7 @@
             <img src="{!! Theme::asset()->url('images/mybg.png') !!}" />
             @endif
         </div>
+        @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
         <form class="registerform" action="/task/create" method="get">
             <div>
                 <div class="space-10"></div>
@@ -265,6 +266,7 @@
                 <button class="btn btn-block btn-primary bor-radius2 text-size14 btn-blue" type="submit">发布需求</button>
             </div>
         </form>
+        @endif
     </div>
     <div class="space-8"></div>
     @if(count($hotList))

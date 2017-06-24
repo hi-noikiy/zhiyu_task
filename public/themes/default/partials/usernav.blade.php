@@ -18,7 +18,7 @@
         </a>
         <div class="z-navactive topheadposi1">
             <a href="javascript:;" class="u-img topheadimg topheadimg-user" data-toggle="dropdown" class="dropdown-toggle">
-                <img src="@if(!empty(Theme::get('avatar'))) {!!  url(Theme::get('avatar')) !!} @else {!! Theme::asset()->url('images/default_avatar.png') !!} @endif" alt="..." class="img-circle head-uploade-after" width="31" height="34" >
+                <img src="@if(\Illuminate\Support\Facades\Session::has('AuthUserInfo'))  {{ env('AUATAR_URL') .  \Illuminate\Support\Facades\Session::get('AuthUserInfo.avatar_url')}} @else {!! Theme::asset()->url('images/default_avatar.png') !!} @endif" alt="..." class="img-circle head-uploade-after" width="31" height="34" >
             </a>
             <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                 <li @if(Theme::get('TYPE') == 1) class="hActive" @endif>
@@ -160,7 +160,7 @@
     </div>
     <div class="z-navactive topheadposi1">
         <a href="javascript:;" class="u-img topheadimg img-interactive-after" data-toggle="dropdown" class="dropdown-toggle">
-            <img src="@if(!empty(Theme::get('avatar'))) {!!  url(Theme::get('avatar')) !!} @else {!! Theme::asset()->url('images/default_avatar.png') !!} @endif" alt="..."   class="img-circle head-uploade-after" width="31" height="34">
+            <img src="@if(\Illuminate\Support\Facades\Session::has('AuthUserInfo'))  {{ env('AUATAR_URL') .  \Illuminate\Support\Facades\Session::get('AuthUserInfo.avatar_url')}} @else {!! Theme::asset()->url('images/default_avatar.png') !!} @endif" alt="..."   class="img-circle head-uploade-after" width="31" height="34">
         </a>
         @if(!Theme::get('tips'))
         <div class="set-password-interactive">

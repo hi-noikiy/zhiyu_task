@@ -96,9 +96,11 @@
                         @endif
                     </div></div>
                 </div>
+                @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                 <div class="pull-right g-tasknavbtn visible-lg-block visible-md-block">
                     <a href="/task/create" class="u-ahref">发布需求</a>
                 </div>
+                @endif
                 <nav  class="navbar navbar-default navbar-static hidden-sm hidden-md hidden-lg col-xs-12"  id="navbar-example" role="navigation">
                     <div class="navbar-header">
                         <button class="navbar-toggle z-activeNavlist" type="button" data-toggle="collapse"

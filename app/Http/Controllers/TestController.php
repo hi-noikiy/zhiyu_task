@@ -13,11 +13,13 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Jobs\SendEmailer;
+use Illuminate\Support\Facades\Session;
 use Theme;
 
 class TestController extends Controller
@@ -29,8 +31,8 @@ class TestController extends Controller
      */
     public function index(Request $request)
     {
-        $aa = RemoteApiModel::jobInfo([2,3]);
-        dd($aa);
+        $s = Session::get('AuthUserInfo');
+        dd($s);
     }
     public function index1(Request $request){
         $mail = "machuang2264@163.com";

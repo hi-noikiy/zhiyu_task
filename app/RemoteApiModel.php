@@ -12,7 +12,7 @@ class RemoteApiModel extends Model
     private $_charset = 'utf-8';
 
     static public $status = '';
-    static public $timeout = 8;
+    static public $timeout = 10;
 
     private $_remoteUrl = "http://api.yjob.net";
     private $_remoteType = array(
@@ -121,13 +121,17 @@ class RemoteApiModel extends Model
                 }
             }
         }
+        if(!$this->_method) dd('没有此方法！');
     }
 
     public static function __callStatic($functionName, $params)
     {
         $RemoteApiModelObj = new RemoteApiModel();
         $RemoteApiModelObj->arr_merge($functionName);
-        return $RemoteApiModelObj->send($params);
+        if(count($params) > 1){
+            dd('暂只支持 1 个数组的参数');
+        }
+        return $RemoteApiModelObj->send($params[0]);
     }
     /**
      * 发送请求并返回数据
@@ -212,7 +216,7 @@ class RemoteApiModel extends Model
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
         $returnValue = curl_exec($ch);
-        self :: $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        self::$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         if($charset != 'utf-8'){
             $returnValue = iconv($charset,'utf-8',$returnValue);
@@ -248,8 +252,7 @@ class RemoteApiModel extends Model
         curl_setopt($ch, CURLOPT_TIMEOUT, self::$timeout);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::$timeout);
         $returnValue = curl_exec($ch);
-        self :: $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        self::$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if($charset != 'utf-8'){
             $returnValue = iconv($charset,'utf-8',$returnValue);
         }

@@ -18,8 +18,11 @@ Route::get('/loginOut', 'UserController@loginOut');
 Route::get('/oauthLogin/{type}', 'ThirdLoginController@oauthLogin');
 Route::get('/oauthLogin/callback/{type}', 'ThirdLoginController@handleOAuthCallBack');*/
 
+
+Route::group(['middleware' => 'AlreadyLogin'], function(){
+    Route::get('login', 'Auth\AuthController@getLogin')->name('loginCreatePage');
+});
 //用户登录 路由
-Route::get('login', 'Auth\AuthController@getLogin')->name('loginCreatePage');
 Route::post('login', 'Auth\AuthController@postLogin')->name('loginCreate');
 Route::get('logout', 'Auth\AuthController@getLogout')->name('logout');
 

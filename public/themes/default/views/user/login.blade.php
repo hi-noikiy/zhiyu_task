@@ -15,7 +15,7 @@
                             <span class="text-size22 pull-left hidden-lg hidden-md hidden-sm visible-xs-block">欢迎登录</span>
                         </div>
                         <div class="pull-right login-welcome">
-                            <a href="{!! url('register') !!}" class="cor-blue text-under">注册</a>
+                            <a href="{!! url('login') !!}" class="cor-blue text-under">注册</a>
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                                     {!! csrf_field() !!}
                                     <label class="block clearfix">
                                         <span class="block input-icon input-icon-right">
-                                            <input type="text" class="form-control inputxt" placeholder="用户名/邮箱" name="username" value="{!! old('username') !!}" nullmsg="请输入您的账号" datatype="*" errormsg="请输入您的账号">
+                                            <input type="text" class="form-control inputxt" placeholder="用户名/手机号" name="username" value="{!! old('username') !!}" nullmsg="请输入您的账号" datatype="*" errormsg="请输入您的账号">
                                             <i class="ace-icon fa fa-user cor-grayD3"></i>
                                             <span class="Validform_checktip validform-login-form login-validform-static">
                                                 <span class="login-red">{!! $errors->first('username') !!}</span>
@@ -76,12 +76,12 @@
                                         <a href="javascript:;"><img src="{!! $code !!}" alt="" class="pull-right" onclick="flushCode(this)"></a>
                                     </div>
                                     @endif
-                                    <div class="clearfix">
+                                    {{--<div class="clearfix">
                                         <label class="inline">
                                             <input type="checkbox" class="ace" name="remember">
                                             <span class="lbl cor-gray87 hov-blue">&nbsp;&nbsp;&nbsp;记住密码</span>
                                         </label>
-                                    </div>
+                                    </div>--}}
                                     <div class="space-4"></div>
                                     <div>
                                         <button type="submit" class=" btn btn-block btn-primary allbtn bg-blue">
@@ -90,8 +90,10 @@
                                     </div>
                                     <div class="space-6"></div>
                                     <div class="clearfix">
-                                        <a href="{!! url('register') !!}" class="pull-left cor-blue text-under">免费注册</a>
-                                        <a href="{!! url('password/email') !!}" class="pull-right cor-blue text-under">忘记密码？</a>
+                                        {{--<a href="{!! url('register') !!}" class="pull-left cor-blue text-under">免费注册</a>--}}
+                                        <a href="http://m.yjob.net/login/wechat_login.html" class="pull-left cor-blue text-under">免费注册</a>
+                                        {{--<a href="{!! url('password/email') !!}" class="pull-right cor-blue text-under">忘记密码？</a>--}}
+                                        <a href="http://m.yjob.net/resetpass/index.html" class="pull-right cor-blue text-under">忘记密码？</a>
                                     </div>
                                     <div class="space-6"></div>
                                     <div class="text-center cor-gray97">
@@ -116,7 +118,8 @@
                                             @endif
                                             @if(isset($oauth['wechat_api']['status']))
                                                 <li>
-                                                    <a href="{!! url('oauth/weixinweb') !!}">
+                                                    {{--<a href="{!! url('oauth/weixinweb') !!}">--}}
+                                                    <a href="http://m.yjob.net/login/wechat_login.html">
                                                         <i class="fa fa-weixin text-blue s-bgqq s-bgweixin"></i>
                                                     </a>
                                                 </li>

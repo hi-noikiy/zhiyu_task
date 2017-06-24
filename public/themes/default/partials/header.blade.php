@@ -1,7 +1,7 @@
 <div class="g-headertop ">
     <div class="container clearfix col-left">
         <div class="row">
-            @if(Auth::check())
+            @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo'))
             <div class="col-xs-12">
                 <div class="pull-left p-space">
                     @if(Theme::get('site_config')['site_name'])
@@ -9,10 +9,11 @@
                     @else
                         职鱼任务系统
                     @endif
-                    &nbsp;&nbsp;&nbsp;&nbsp;HI~ <a href="/user/index">{!! Auth::User()->name !!}</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/user/messageList/1"><i class="fa fa-envelope-o"></i> 消息@if(Theme::get('message_count') > 0)({!! Theme::get('message_count') !!})@endif</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{!! url('logout') !!}">退出</a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;HI~ <a href="/user/index">{!! \Illuminate\Support\Facades\Session::get('AuthUserInfo')['wx_nick'] !!}</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/user/messageList/1"><i class="fa fa-envelope-o"></i> 消息@if(Theme::get('message_count') > 0)({!! Theme::get('message_count') !!})@endif</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{!! url('logout') !!}">退出</a>
                 </div>
                 <div class="pull-right">
                     <ul class="pull-left g-taskbarlist hidden-sm hidden-xs">
+                        @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                         <li class="pull-left g-taskbarli"><a class="g-taskbar1 g-taskbarbor" href="/user/myTasksList">我是雇主 <i
                                         class="fa fa-caret-down"></i></a>
                             <div class="g-taskbardown1">
@@ -20,6 +21,7 @@
                                 <div><a class="cor-blue2f" href="/user/myTasksList">我发布的任务<span class="red">@if(Theme::get('my_task') > 0){!! Theme::get('my_task') !!}@endif</span></a></div>
                             </div>
                         </li>
+                        @endif
                         <li class="pull-left g-taskbarli"><a class="g-taskbar2 g-taskbarbor" href="/user/acceptTasksList">我是威客 <i class="fa fa-caret-down"></i></a>
                             <div class="g-taskbardown1">
                                 <div><a class="cor-blue2f" href="/user/personCase">我的空间</a></div>
@@ -48,11 +50,11 @@
                     @if(Theme::get('site_config')['site_name'])
                         {!! Theme::get('site_config')['site_name'] !!}
                     @else
-                        客客专业威客建站系统
+                        职鱼任务系统
                     @endif
                 </div>
                 <div class="pull-right">
-                    <div class="pull-left">HI~</a>请[<a href="{!! url('login') !!}">登录</a>] [<a href="{!! url('register') !!}">免费注册</a>]</div>
+                    <div class="pull-left">HI~</a>请[<a href="{!! url('login') !!}">登录</a>] [<a href="{!! url('login') !!}">免费注册</a>]</div>
                     <ul class="pull-left g-taskbarlist hidden-sm hidden-xs">
                         <li class="pull-left g-taskbarli"><a class="g-taskbar1 g-taskbarbor" href="/user/myTasksList">我是雇主 <i
                                         class="fa fa-caret-down"></i></a>
@@ -316,7 +318,7 @@
                             <li class="s-sign clearfix hidden-md hidden-xs hidden-sm navactiveImg">
                                 @if(Auth::check())
                                     {{--<div class="z-navactive topheadposi1">--}}
-                                        <a href="javascript:;" class="u-img topheadimg" data-toggle="dropdown" class="dropdown-toggle"><img src="@if(!empty(Theme::get('avatar'))) {!!  url(Theme::get('avatar')) !!} @else {!! Theme::asset()->url('images/default_avatar.png') !!} @endif" alt="..."  class="img-circle head-uploade-after" width="31" height="34" ></a>
+                                        <a href="javascript:;" class="u-img topheadimg" data-toggle="dropdown" class="dropdown-toggle"><img src="@if(\Illuminate\Support\Facades\Session::has('AuthUserInfo'))  {{ env('AUATAR_URL') .  \Illuminate\Support\Facades\Session::get('AuthUserInfo.avatar_url')}} @else {!! Theme::asset()->url('images/default_avatar.png') !!} @endif" alt="..."  class="img-circle head-uploade-after" width="31" height="34" ></a>
                                         <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                                             <li>
                                                 <a href="{!! url('user/index') !!}">
@@ -364,7 +366,9 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
+                            @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                             <a href="/task/create" type="submit" class=" f-click bor-radius2 hidden-lg hidden-md cor-white f-click-btn">发布任务</a>
+                            @endif
                             {{--搜索--}}
                             {{--<button class="navbar-toggle mg-right0" type="button" data-toggle="collapse"--}}
                                     {{--data-target=".bs-js-navbar-scrollspy1">--}}

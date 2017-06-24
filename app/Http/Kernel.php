@@ -49,5 +49,7 @@ class Kernel extends HttpKernel
 
         // 年龄中间件
         'oldAge' => \App\Http\Middleware\OldMiddleware::class,
+
+        'AlreadyLogin' => \App\Http\Middleware\AlreadyLogin::class,
     ];
 }

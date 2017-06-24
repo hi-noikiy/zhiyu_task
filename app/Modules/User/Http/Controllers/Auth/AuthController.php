@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Http\Controllers\Auth;
 
+use App\DecrModel;
 use App\Http\Controllers\IndexController;
 use App\Modules\Manage\Model\AgreementModel;
 use App\Modules\Manage\Model\ConfigModel;
@@ -9,6 +10,7 @@ use App\Modules\User\Http\Requests\LoginRequest;
 use App\Modules\User\Http\Requests\RegisterRequest;
 use App\Modules\User\Model\OauthBindModel;
 use App\Modules\User\Model\UserModel;
+use App\RemoteApiModel;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Validator;
@@ -93,27 +95,48 @@ class AuthController extends IndexController
         if ($request->get('code') && !\CommonClass::checkCode($request->get('code'))) {
             $error['code'] = '请输入正确的验证码';
         } else {
-            if (!UserModel::checkPassword($request->get('username'), $request->get('password'))) {
+            /*if (!UserModel::checkPassword($request->get('username'), $request->get('password'))) {
                 $error['password'] = '请输入正确的帐号或密码';
             } else {
                 $user = UserModel::where('name', $request->get('username'))->first();
                 if (!empty($user) && $user->status == 2){
                     $error['username'] = '该账户已禁用';
                 }
+            }*/
+
+
+            $remoteUserData = array(
+                'user_name' => $request->input('username'),
+                'password' => $request->input('password'),
+                'login_type' => 100,
+                'login_ip' => $request->ip()
+            );
+            $userLoginRst = RemoteApiModel::userLogin($remoteUserData);
+            if($userLoginRst['codes'] === 0){
+                setcookie('UserCookieUid', DecrModel::mc_encode($userLoginRst['data']['id']), time() + 7*24*3600, "/", "yjob.net");
+                setcookie('UserCookieUinionid', DecrModel::mc_encode($userLoginRst['data']['wx_union_id']), time() + 7*24*3600, "/", "yjob.net");
+                if(in_array($userLoginRst['data']['mobile'], Config::get('employer.employer'))){
+                    $userLoginRst['data']['employer'] = $userLoginRst['data']['mobile'];
+                }
+                Session::put('AuthUserInfo', $userLoginRst['data'], 7*24*60);
+                return redirect("task");
+            }else{
+                $error['password'] = '请输入正确的帐号或密码';
             }
         }
         if (!empty($error)) {
             return redirect($this->loginPath())->withInput($request->only('username', 'remember'))->withErrors($error);
         }
-        $throttles = $this->isUsingThrottlesLoginsTrait();
+
+
+        /*$throttles = $this->isUsingThrottlesLoginsTrait();
         $user = UserModel::where('email', $request->get('username'))->orWhere('name', $request->get('username'))->first();
         if ($user && !$user->status) {
             return redirect('waitActive/' . Crypt::encrypt($user->email))->withInput(array('email' => $request->get('email')));
         }
         Auth::loginUsingId($user->id);
         UserModel::where('email', $request->get('email'))->update(['last_login_time' => date('Y-m-d H:i:s')]);
-        return $this->handleUserWasAuthenticated($request, $throttles);
-
+        return $this->handleUserWasAuthenticated($request, $throttles);*/
     }
 
     /**
