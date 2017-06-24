@@ -51,5 +51,6 @@ class Kernel extends HttpKernel
         'oldAge' => \App\Http\Middleware\OldMiddleware::class,
 
         'AlreadyLogin' => \App\Http\Middleware\AlreadyLogin::class,
+        'IsEmployer' => \App\Http\Middleware\IsEmployer::class,
     ];
 }

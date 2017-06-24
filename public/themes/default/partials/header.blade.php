@@ -22,7 +22,9 @@
                             </div>
                         </li>
                         @endif
+                            @if(!\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                         <li class="pull-left g-taskbarli"><a class="g-taskbar2 g-taskbarbor" href="/user/acceptTasksList">我是威客 <i class="fa fa-caret-down"></i></a>
+                            @endif
                             <div class="g-taskbardown1">
                                 <div><a class="cor-blue2f" href="/user/personCase">我的空间</a></div>
                                 <div><a class="cor-blue2f" href="/user/myTask">我的任务<span class="red">@if(Theme::get('my_focus_task') > 0){!! Theme::get('my_focus_task') !!} @endif</span></a></div>

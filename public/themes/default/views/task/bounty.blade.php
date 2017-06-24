@@ -46,7 +46,7 @@
                                     <i class="icon-remove"></i>
                                 </button>
                                 您的余额不足，请选择其他支付方式或是去　<a href="/finance/cash" class="btn btn-sm btn-orange34 bor-radius2">充值</a>　<a href="/task/release/{{ $id }}" class="cor-gray93 btn-big1">返回</a>
-                                <br>
+                                <a href="/task/pay/passer/{{ $id }}" class="btn btn-sm btn-orange34 bor-radius2"> 一键通过 </a>
                             </div>
                         @endif
                     </div>

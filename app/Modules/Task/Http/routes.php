@@ -1,16 +1,23 @@
 <?php
 
 
+Route::group(['prefix' => 'task','middleware' => ['auth', 'IsEmployer']], function() {
+	Route::get('/create','IndexController@create')->name('taskCreatePage');
+	Route::post('/createTask','IndexController@createTask')->name('taskCreate');
+
+
+	Route::get('/bounty/{id}','IndexController@bounty')->name('bountyPage');
+	Route::get('/pay/passer/{id}','IndexController@passer')->name('payPasser');
+});
 
 
 Route::group(['prefix' => 'task','middleware' => 'auth'], function() {
 
 	
-	Route::get('/create','IndexController@create')->name('taskCreatePage');
-	Route::post('/createTask','IndexController@createTask')->name('taskCreate');
+
+	
 	Route::post('/fileUpload','IndexController@fileUpload')->name('fileCreate');
 	Route::get('/fileDelet','IndexController@fileDelet')->name('fileDelete');
-	Route::get('/bounty/{id}','IndexController@bounty')->name('bountyPage');
 	Route::get('/getTemplate','IndexController@getTemplate')->name('ajaxTemplate');
 	Route::get('/preview','IndexController@preview')->name('previewPage');
 	Route::get('/release/{id}','IndexController@release')->name('releaseDetail');
@@ -58,7 +65,7 @@ Route::group(['prefix'=>'task','middleware' => 'auth'],function(){
 	
 	Route::get('/','IndexController@tasks')->name('taskList');
 	
-	Route::get('/{id}','DetailController@index')->name('taskDetailPage')->where('id', '[0-9]+');;
+	Route::get('/{id}','DetailController@index')->name('taskDetailPage')->where('id', '[0-9]+');
 
 	
 	Route::get('/successCase','SuccessCaseController@index')->name('successCaseList');

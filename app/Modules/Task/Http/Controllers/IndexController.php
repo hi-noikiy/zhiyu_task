@@ -24,6 +24,7 @@ use App\Modules\Order\Model\OrderModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Theme;
 use QrCode;
 use App\Modules\Advertisement\Model\AdTargetModel;
@@ -39,7 +40,7 @@ class IndexController extends BasicIndexController
     public function __construct()
     {
         parent::__construct();
-        $this->user = Auth::user();
+        $this->user = Session::get('AuthUserInfo');
         $this->initTheme('main');
     }
 
@@ -223,7 +224,7 @@ class IndexController extends BasicIndexController
     public function createTask(TaskRequest $request)
     {
         $data = $request->except('_token');
-        $data['uid'] = $this->user['id'];
+        $data['uid'] = Session::get('AuthUserInfo.id');
         $data['desc'] = \CommonClass::removeXss($data['description']);
         $data['created_at'] = date('Y-m-d H:i:s', time());
         $data['begin_at'] = preg_replace('/([\x80-\xff]*)/i', '', $data['begin_at']);
@@ -336,12 +337,13 @@ class IndexController extends BasicIndexController
     }
 
     /**
-     * 赏金托管页面
+     * 赏金托管页面 支付页面
      * @param $id
      * @return mixed
      */
     public function bounty($id)
     {
+
         $this->theme->setTitle('赏金托管');
         //查询用户发布的数据
         $task = TaskModel::findById($id);
@@ -381,6 +383,20 @@ class IndexController extends BasicIndexController
             'payConfig' => $payConfig
         ];
         return $this->theme->scope('task.bounty', $view)->render();
+    }
+    /**
+     * 超级一键通过
+     */
+    public function passer(Request $request, $id){
+        $task = TaskModel::findById($id);
+        if($task->bounty_status == 0){
+            $task->bounty_status = 1;
+            if($task->save()){
+                return redirect("/task")->withError('付款成功！');
+            }else{
+                return redirect("/task")->withError('付款失败！');
+            }
+        }
     }
 
     /**
