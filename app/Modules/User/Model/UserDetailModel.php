@@ -6,6 +6,7 @@ use App\Modules\Finance\Model\FinancialModel;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use Auth;
+use Illuminate\Support\Facades\Session;
 
 class UserDetailModel extends Model
 {
@@ -84,8 +85,8 @@ class UserDetailModel extends Model
      */
     static function closeTips()
     {
-        $user = Auth::User();
-        return self::where('uid', $user->id)->update(['alternate_tips' => 1]);
+        $user = Session::get('AuthUserInfo');
+        return self::where('uid', $user['id'])->update(['alternate_tips' => 1]);
     }
 
     /**

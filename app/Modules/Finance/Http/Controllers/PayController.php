@@ -42,7 +42,12 @@ class PayController extends UserCenterController
     public function getCash()
     {
         $this->theme->setTitle('我要充值');
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
         $userInfo = UserDetailModel::select('balance')->where('uid', $user->id)->first();
 
         $payConfig = ConfigModel::getConfigByType('thirdpay');
@@ -61,7 +66,12 @@ class PayController extends UserCenterController
     
     public function postCash(PayRequest $request)
     {
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
         $config = ConfigModel::getConfigByAlias('cash');
         $config->rule = json_decode($config->rule, true);
         if ($request->get('cash') < $config->rule['recharge_min']) {
@@ -156,7 +166,12 @@ class PayController extends UserCenterController
     public function getCashout()
     {
         $this->theme->setTitle('我要提现');
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
         $userInfo = UserDetailModel::select('balance')->where('uid', $user->id)->first();
         $cashRule = json_decode(ConfigModel::getConfigByAlias('cash')->rule, true);
         
@@ -174,7 +189,12 @@ class PayController extends UserCenterController
     
     public function postCashout(CashoutRequest $request)
     {
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
         $userInfo = UserDetailModel::select('balance')->where('uid', $user->id)->first();
         
         $cashConfig = ConfigModel::getConfigByAlias('cash');
@@ -228,7 +248,12 @@ class PayController extends UserCenterController
     {
         $cashoutInfo = Crypt::decrypt($cashoutInfo);
 
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
         $userInfo = UserDetailModel::select('balance')->where('uid', $user->id)->first();
 
         $is_bank = BankAuthModel::select('bank_name')
@@ -252,7 +277,12 @@ class PayController extends UserCenterController
     {
         $alternate_password = $request->get('alternate_password');
         $cashoutInfo = Crypt::decrypt($request->get('cashInfo'));
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
         if (UserModel::encryptPassword($alternate_password, $user->salt) === $user->alternate_password) {
             $data = array(
                 'uid' => $user->id,
@@ -278,7 +308,11 @@ class PayController extends UserCenterController
     
     public function getFinanceList(Request $request)
     {
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
 
         if ($request->get('type')){
             switch ($request->get('type')){
@@ -310,7 +344,12 @@ class PayController extends UserCenterController
     public function assetdetail(Request $request)
     {
 
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
         $balance = UserDetailModel::where('uid', $user->id)->first()->balance;
         $list = FinancialModel::where('uid', $user->id);
 
@@ -348,7 +387,12 @@ class PayController extends UserCenterController
     public function assetDetailminute($id)
     {
 
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
         $avatar = UserDetailModel::where('uid', $user->id)->first()->avatar;
         $info = FinancialModel::where('uid', $user->id)->where('id', $id)->first();
         if (!empty($info)) {
@@ -368,7 +412,14 @@ class PayController extends UserCenterController
     
     public function getpay($id)
     {
-        $uid = Auth::id();
+        //$uid = Auth::id();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+        $uid = $user->id;
+
         $userInfo = UserDetailModel::select('balance')->where('uid', $uid)->first();
 
         $payConfig = ConfigModel::getConfigByType('thirdpay');
@@ -398,7 +449,16 @@ class PayController extends UserCenterController
     public function balancePayment(Request $request)
     {
         if ($request->get('password')){
-            $user = UserModel::find(Auth::id());
+
+            //$uid = Auth::id();
+            //$user = Auth::User();
+            $user = Session::get('AuthUserInfo');
+            $jsen = json_encode($user);
+            $jsde = json_decode($jsen);
+            $user = $jsde;
+            $uid = $user->id;
+
+            $user = UserModel::find($uid);
             $pwd = UserModel::encryptPassword($request->get('password'), $user->salt);
 
             if ($pwd == $user->alternate_password){
@@ -426,11 +486,20 @@ class PayController extends UserCenterController
         }else{
             $cash = '';
         }
-        
+
+
+        //$uid = Auth::id();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+        $uid = $user->id;
+
         $data = [
-            'code' => ShopOrderModel::randomCode(Auth::id(), 'pg'),
+            'code' => ShopOrderModel::randomCode($uid, 'pg'),
             'title' => '购买商品推荐增值服务',
-            'uid' => Auth::id(),
+            'uid' => $uid,
             'object_id' => $goodId,
             'object_type' => 3,
             'cash' => $cash,

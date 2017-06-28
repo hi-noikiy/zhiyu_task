@@ -27,7 +27,7 @@ class UserCenterController extends BasicUserCenterController
     public function __construct()
     {
         parent::__construct();
-        $this->user = Auth::user();
+        $this->user = Session::get('AuthUserInfo');
     }
 
     /**
@@ -40,11 +40,15 @@ class UserCenterController extends BasicUserCenterController
         $this->theme->set('keywords','用户中心,管理中心,用户管理中心');
         $this->theme->set('description','用户中心，用户管理中心。');
         //关联查询用户的detail数据
-        $user_data = UserModel::select('users.name as nickname', 'user_detail.avatar', 'user_detail.balance')
+        /*$user_data = UserModel::select('users.name as nickname', 'user_detail.avatar', 'user_detail.balance')
             ->where('users.id', $this->user['id'])
             ->join('user_detail', 'users.id', '=', 'user_detail.uid')
-            ->first()->toArray();
-        $domain = \CommonClass::getDomain();
+            ->first()->toArray();*/
+        $user_data = UserDetailModel::findByUid($this->user['id']);
+
+
+        //$domain = \CommonClass::getDomain();
+        $domain = env('AUATAR_URL');
         $user_data['avatar_url'] = $domain . '/' . $user_data['avatar'] . md5($this->user['id'] . 'large') . '.jpg';
         //查询用户三种银行信息绑定是否成功
         $userModel = new UserModel();
@@ -167,6 +171,7 @@ class UserCenterController extends BasicUserCenterController
         $this->theme->setTitle('用户中心');
         //创建用户的信息
         $uinfo = UserDetailModel::findByUid($this->user['id']);
+
         //查询省信息
         $province = DistrictModel::findTree(0);
         //查询城市数据
@@ -199,15 +204,15 @@ class UserCenterController extends BasicUserCenterController
      */
     public function infoUpdate(UserInfoRequest $request)
     {
-        $data = $request->except('_token');
+        $data = $request->except(['_token', '_url']);
 
         $result = UserDetailModel::where('uid', $this->user['id'])->update($data);
 
         if (!$result) {
-            return redirect()->back()->with(['error' => '修改失败！']);
+            return redirect()->back()->withError('修改失败！');
         }
 
-        return redirect()->back()->with(['massage' => '修改成功！']);
+        return redirect()->back()->withError('修改成功！');
     }
 
     /**
@@ -233,6 +238,7 @@ class UserCenterController extends BasicUserCenterController
      */
     public function passwordUpdate(PasswordRequest $request)
     {
+        
         //验证用户的密码
         $data = $request->except('_token');
 
@@ -488,6 +494,13 @@ class UserCenterController extends BasicUserCenterController
      */
     public function ajaxAvatar(Request $request)
     {
+
+        $result['code'] = 500;
+        $result['message'] = '上传失败！';
+        return response()->json($result);
+
+
+
         $file = $request->file('avatar');
         //处理上传图片
         $result = \FileClass::uploadFile($file, $path = 'user');

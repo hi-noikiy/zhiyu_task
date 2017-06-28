@@ -25,7 +25,7 @@ function ajaxMyTask(obj)
                 }
 
                 html += "<div class=\"space-4\"><\/div><p class=\"cor-gray51\">"+data.my_tasks[i].datas[s].desc+"<\/p><div class=\"g-userlabel\"><a href=\"#\">"+data.my_tasks[i].datas[s].cate_name+"<\/a>" +
-                "<a href=\"#\">湖北武汉<\/a><\/div><\/div><div class=\"col-md-3 text-right\"><a class=\"btn-big bg-blue bor-radius2\" href=\"/task/"+data.my_tasks[i].datas[s].id+"\">查看<\/a><\/div><\/div><\/li>";
+                "<a href=\"#\">北京市<\/a><\/div><\/div><div class=\"col-md-3 text-right\"><a class=\"btn-big bg-blue bor-radius2\" href=\"/task/"+data.my_tasks[i].datas[s].id+"\">查看<\/a><\/div><\/div><\/li>";
 
             }
         }

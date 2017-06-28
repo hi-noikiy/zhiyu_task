@@ -257,21 +257,25 @@
                                     <li class="{{ !isset($merge['work_type'])?'active':'' }}"><a href="javascript:void(0);" onclick="ajaxPageWorks($(this))"  url="{{ URL('task/ajaxPageWorks/').'/'.$detail['id']}}" class="{{ !isset($merge['work_type'])?'btn-blue':'' }}">全部</a></li>
                                     <li class="{{ (isset($merge['work_type']) && $merge['work_type']==1)?'active':'' }}"><a class="{{ (isset($merge['work_type']) && $merge['work_type']==1)?'btn-blue':'' }}" href="javascript:void(0)" onclick="ajaxPageWorks($(this))" url="{{ URL('task/ajaxPageWorks/').'/'.$detail['id'].'?'.http_build_query(['work_type'=>1]) }}">未中标<span> ({{ ($works_count-$works_bid_count) }})</span></a></li>
                                     <li class="{{ (isset($merge['work_type']) && $merge['work_type']==2)?'active':'' }}"><a class="{{ (isset($merge['work_type']) && $merge['work_type']==2)?'btn-blue':'' }}" href="javascript:void(0)" onclick="ajaxPageWorks($(this))" url="{{ URL('task/ajaxPageWorks/').'/'.$detail['id'].'?'.http_build_query(['work_type'=>2]) }}">中标<span> ({{ $works_bid_count }})</span></a></li>
+
+                                    @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
+                                        <li><a href="{{ URL('task/stopThisTask/').'/'.$detail['id'] }}" onclick="if(confirm('你确定要停止当前任务吗？') == false) return false"> 停止竞标 </a></li>
+                                    @endif
                                 </ul>
                             </div>
                             @if(count($works['data'])>0)
                                 @foreach($works['data'] as $v)
-									@if($detail['work_status']==0 || $user_type==1 || $v['uid']==Auth::user()['id'])
+									@if($detail['work_status'] == 0 || $user_type==1 || (\Illuminate\Support\Facades\Session::has('AuthUserInfo') && \Illuminate\Support\Facades\Session::get('AuthUserInfo.id') == $v['uid']))
                             <div class="bidrecords">
                                 <div class="evaluate row">
                                     <div class="col-md-1 col-xs-2 task-bidMedia evaluateimg">
-                                        <img src="{{ $domain.'/'.CommonClass::getAvatar($v['uid']) }}"  onerror="onerrorImage('{{ Theme::asset()->url('images/defauthead.png')}}',$(this))" class="img-r"></div>
+                                        <img src="@if($v['avatar']) {{ env('AUATAR_URL') . $v['avatar'] }} @else{{ $domain.'/'.CommonClass::getAvatar($v['uid']) }}@endif"  onerror="onerrorImage('{{ Theme::asset()->url('images/defauthead.png')}}',$(this))" class="img-r"></div>
                                     <div class="col-md-11 col-xs-10 evaluatemain">
                                         <div class="evaluateinfo clearfix">
                                             <div class="pull-left">
-                                                <p><b>{{ $v['nickname'] }}</b>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;好评率：<span class="text-orange">{{ CommonClass::applauseRate($v['uid']) }}%</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <p><b>{{ $v['user_name'] }}</b>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;好评率：<span class="text-orange">{{ CommonClass::applauseRate($v['uid']) }}%</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                                     @if($user_type==1)
-                                                        @if(Auth::check() && Auth::User()->id != $v['uid'])
+                                                        @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo') && \Illuminate\Support\Facades\Session::get('AuthUserInfo.id') != $v['uid'])
                                                             <a class="taskconico contactHe" data-toggle="modal" data-target="#myModalwk"data-values="{{$v['uid']}}" data="{{Theme::get('is_IM_open')}}">联系TA</a>
                                                         @endif
                                                     <a class="taskentuseico" href="{{ url('bre/serviceCaseList',['uid'=>$v['uid']]) }}">进入空间</a>
@@ -294,7 +298,7 @@
                                                                 </span>
                                                             </div>
                                                             <div class="modal-body text-center">
-                                                                <p class="h5">确定将“<span class="text-primary">{{ $v['nickname'] }}</span>”设置为中标吗？</p>
+                                                                <p class="h5">确定将“<span class="text-primary">{{ $v['user_name'] }}</span>”设置为中标吗？中标金额为 <span class="text-primary">{{ $detail['bounty'] }} </span>元</p>
                                                                 <div class="space"></div>
                                                                 <p><button class="btn btn-primary btn-sm btn-big1 btn-blue bor-radius2 win-bid" type="button" task_id="{{ $detail['id'] }}" work_id="{{ $v['id'] }}" onclick="winBid($(this))" data-dismiss="modal">确定</button> <button class="btn btn-default btn-sm btn-big1 btn-gray999 bor-radius2" type="button" data-dismiss="modal">取消</button></p>
                                                             </div>
@@ -381,7 +385,7 @@
                                             </div>
                                         </div>
                                         <div class="text-right">
-                                            @if(Auth::check())
+                                            @if(Session::has('AuthUserInfo'))
                                             <a class="evaluateshow text-under blue get-comment" url="/task/getComment" work_id = '{{ $v['id'] }}' num="0" onclick="evaluateshow($(this))"  >回复({{ count($v['children_comment']) }})</a>
                                             @else
                                             <a class="evaluateshow text-under blue" url="/task/getComment" work_id = '{{ $v['id'] }}' onclick="loginremaind($(this))"  >回复{{ count($v['children_comment']) }}</a>

@@ -79,7 +79,10 @@ class serviceController extends IndexController
        $this->theme->setTitle('服务商评价详情');
        
        $isFocus = \CommonClass::isFocus($uid);
-       $user = UserModel::where('id',$uid)->first();
+       $user = UserModel::where('id', $uid)->first();
+       if(!$user){
+           return back()->withError('请求的页面不存在！');
+       }
        $userInfo = UserDetailModel::where('uid', $uid)->first();
        
        $tag = UserTagsModel::getTagsByUserId($uid);
@@ -104,7 +107,8 @@ class serviceController extends IndexController
        $avgquality = round(CommentModel::where('to_uid', $uid)->avg('quality_score'), 1);
        
        $avgattitude = round(CommentModel::where('to_uid', $uid)->avg('attitude_score'), 1);
-       $domain = \CommonClass::getDomain();
+       //$domain = \CommonClass::getDomain();
+       $domain = env('AUATAR_URL');
        $data = array(
            'uid' => $uid,
            'user' => $user,

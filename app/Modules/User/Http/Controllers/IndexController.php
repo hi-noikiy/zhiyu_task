@@ -7,6 +7,7 @@ use App\Modules\User\SpaceModel;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Validator;
 use Crypt;
 use Storage;
@@ -38,11 +39,11 @@ class IndexController extends UserCenterController
     
     public function updateTips(Request $request)
     {
-        $user = Auth::user();
+        $user = Session::get('AuthUserInfo');
         $arr = array(
             'alternate_tips' => 1
         );
-        $res = UserDetailModel::where('uid',$user->id)->update($arr);
+        $res = UserDetailModel::where('uid', $user['id'])->update($arr);
         if($res){
             $data = array(
                 'code' => 1,

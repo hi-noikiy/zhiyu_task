@@ -26,6 +26,7 @@ use App\Modules\Advertisement\Model\AdModel;
 use App\Modules\Advertisement\Model\RePositionModel;
 use App\Modules\Advertisement\Model\RecommendModel;
 use App\Modules\Manage\Model\ConfigModel;
+use Illuminate\Support\Facades\Session;
 use Teepluss\Theme\Theme;
 
 
@@ -34,7 +35,7 @@ class DetailController extends IndexController
     public function __construct()
     {
         parent::__construct();
-        $this->user = Auth::user();
+        $this->user = Session::get('AuthUserInfo');
         $this->initTheme('main');
     }
     /**
@@ -49,7 +50,7 @@ class DetailController extends IndexController
         //查询任务详情
         $detail = TaskModel::detail($id);
         //搜索引擎屏蔽
-        if($detail['engine_status']==1)
+        if($detail['engine_status'] == 1)
         {
             $this->theme->set('engine_status',1);
         }
@@ -68,26 +69,26 @@ class DetailController extends IndexController
         $delivery_count = 0;
         $works_rights_count = 0;
         //判断当前状态是否需要区别三种角色,登陆之后的
-        if($detail['status']>2 && Auth::check())
+        if($detail['status'] > 2)
         {
             //判断当前角色是否是投稿人
-            if(WorkModel::isWorker($this->user['id'],$detail['id']))
+            if(WorkModel::isWorker(Session::get('AuthUserInfo.id'), $detail['id']))
             {
                 $user_type = 2;
                 //判断用户投稿人是否入围
-                $is_win_bid = WorkModel::isWinBid($id,$this->user['id']);
-                $is_delivery = WorkModel::where('task_id',$id)->where('status','>',1)->where('uid',$this->user['id'])->first();
-                $is_rights = WorkModel::where('task_id',$id)->where('status','=',4)->where('uid',$this->user['id'])->first();
+                $is_win_bid = WorkModel::isWinBid($id, Session::get('AuthUserInfo.id'));
+                $is_delivery = WorkModel::where('task_id',$id)->where('status','>',1)->where('uid', Session::get('AuthUserInfo.id'))->first();
+                $is_rights = WorkModel::where('task_id',$id)->where('status','=',4)->where('uid', Session::get('AuthUserInfo.id'))->first();
             }
             //判断当前的角色是否是发布人,任务角色的优先级最高
-            if($detail['uid']==$this->user['id'])
+            if($detail['uid'] == Session::get('AuthUserInfo.id'))
             {
                 $user_type = 1;
             }
         }
 
         //查询投稿记录
-        $works = WorkModel::findAll($id,$data);
+        $works = WorkModel::findAll($id, $data);
         $works_count = WorkModel::where('task_id',$id)->where('status','<=',1)->where('forbidden',0)->count();//投稿记录个数统计
         $works_bid_count = WorkModel::where('task_id',$id)->where('status','=',1)->where('forbidden',0)->count();//中标记录个数统计
         $works_winbid_count = WorkModel::where('task_id',$id)->where('status','=',1)->where('forbidden',0)->count();
@@ -107,27 +108,23 @@ class DetailController extends IndexController
         //查询交付记录
             //根据角色判断查询交付内容
         $delivery = [];
-        if(Auth::check())
-        {
-            if($user_type==2)
-            {
-                $delivery = WorkModel::select('work.*','us.name as nickname','a.avatar')
-                    ->where('work.uid',$this->user['id'])
-                    ->where('work.task_id',$id)
-                    ->where('work.status','>=',2)
-                    ->with('childrenAttachment')
-                    ->join('user_detail as a','a.uid','=','work.uid')
-                    ->leftjoin('users as us','us.id','=','work.uid')
-                    ->paginate(5)->setPageName('delivery_page')->toArray();
-                $delivery_count = 1;
-            }elseif($user_type==1){
-                $delivery = WorkModel::findDelivery($id,$data);
-                $delivery_count = WorkModel::where('task_id',$id)->where('status','>=',2)->count();
 
-            }
+        if($user_type==2)
+        {
+            $delivery = WorkModel::select('work.*')
+                ->where('work.uid', Session::get('AuthUserInfo.id'))
+                ->where('work.task_id', $id)
+                ->where('work.status', '>=', 2)
+                ->with('childrenAttachment')
+                ->paginate(5)->setPageName('delivery_page')->toArray();
+            $delivery_count = 1;
+        }elseif($user_type==1){
+            $delivery = WorkModel::findDelivery($id, $data);
+            $delivery_count = WorkModel::where('task_id',$id)->where('status','>=',2)->count();
         }
+
         //查询任务评价
-        $comment = CommentModel::taskComment($id,$data);
+        $comment = CommentModel::taskComment($id, $data);
 
         $comment_count = CommentModel::where('task_id',$id)->count();
         //统计好中差评个数
@@ -143,23 +140,19 @@ class DetailController extends IndexController
 
         //查询维权稿件
         $works_rights = [];
-        if(Auth::check())
+
+        if($user_type==2)
         {
-            if($user_type==2)
-            {
-                $works_rights = WorkModel::select('work.*','us.name as nickname','ud.avatar')
-                    ->where('work.uid',$this->user['id'])
-                    ->where('task_id',$id)->where('work.status',4)
-                    ->with('childrenAttachment')
-                    ->join('user_detail as ud','ud.uid','=','work.uid')
-                    ->leftjoin('users as us','us.id','=','work.uid')
-                    ->paginate(5)->setPageName('delivery_page')->toArray();
-                $works_rights_count = 1;
-            }elseif($user_type==1)
-            {
-                $works_rights = WorkModel::findRights($id);
-                $works_rights_count = WorkModel::where('task_id',$id)->where('status',4)->count();
-            }
+            $works_rights = WorkModel::select('work.*')
+                ->where('work.uid',$this->user['id'])
+                ->where('task_id', $id)->where('work.status',4)
+                ->with('childrenAttachment')
+                ->paginate(5)->setPageName('delivery_page')->toArray();
+            $works_rights_count = 1;
+        }elseif($user_type==1)
+        {
+            $works_rights = WorkModel::findRights($id);
+            $works_rights_count = WorkModel::where('task_id',$id)->where('status',4)->count();
         }
 
         $domain = \CommonClass::getDomain();
@@ -259,7 +252,9 @@ class DetailController extends IndexController
     {
         $data = $request->except('_token');
         $data['desc'] = \CommonClass::removeXss($data['desc']);
-        $data['uid'] = $this->user['id'];
+        $data['uid'] = Session::get('AuthUserInfo.id');
+        $data['user_name'] = Session::get('AuthUserInfo.nick_name');
+        $data['avatar'] = Session::get('AuthUserInfo.avatar_url');
         $data['created_at'] = date('Y-m-d H:i:s',time());
 
         //判断当前用户是否有资格投标
@@ -280,14 +275,16 @@ class DetailController extends IndexController
         if($task_delivery)
         {
             $task = TaskModel::where('id',$data['task_id'])->first();
-            $user = UserModel::where('id',$task['uid'])->first();//必要条件
+            //$user = UserModel::where('id',$task['uid'])->first();//必要条件
+            $user = Session::get('AuthUserInfo');
+
 
             $site_name = \CommonClass::getConfig('site_name');//必要条件
-            $user_name = Auth::user()['name'];
+            $user_name = $user['nick_name'];
             //组织好系统消息的信息
             //发送系统消息
             $messageVariableArr = [
-                'username'=>$user['name'],
+                'username'=>$user_name,
                 'name'=>$user_name,
                 'task_title'=>$task['title'],
                 'website'=>$site_name,
@@ -304,7 +301,7 @@ class DetailController extends IndexController
             ];
             MessageReceiveModel::create($messages);
         }
-        return redirect()->to('task/'.$data['task_id']);
+        return redirect()->to('task/'.$data['task_id'])->withRrror("提交成功！");
     }
 
     /**
@@ -319,17 +316,18 @@ class DetailController extends IndexController
             //查询任务的发布者
         $task_user = TaskModel::where('id',$task_id)->lists('uid');
 
-        if($task_user[0]!=$this->user['id'])
+        if($task_user[0] != $this->user['id'])
         {
             return redirect()->back()->with(['error'=>'非法操作,你不是任务的发布者不能选择中标人选！']);
         }
         //判断当前的任务的入围人数是否用完
         $worker_num = TaskModel::where('id',$task_id)->lists('worker_num');
+
         //当前任务的入围人数统计
         $win_bid_num = WorkModel::where('task_id',$task_id)->where('status',1)->count();
 
         //判断当前是否可以选择中标
-        if($worker_num[0]>$win_bid_num)
+        if($worker_num[0] > 0)
         {
             $data['worker_num'] = $worker_num[0];
             $data['win_bid_num'] = $win_bid_num;
@@ -341,7 +339,26 @@ class DetailController extends IndexController
             return redirect()->back()->with(['error'=>'当前中标人数已满！']);
         }
 
-        return redirect()->back()->with(['massage'=>'选稿成功！']);
+        return redirect()->back()->with(['error'=>'选稿成功！']);
+    }
+    /**
+     * 停止当前任务
+     *      修改当前任务到 7 交付验收阶段
+     * */
+    public function stopThisTask(Request $request, $id){
+        $task_user = TaskModel::where('id', $id)->lists('uid');
+
+        if($task_user[0] != $this->user['id'])
+        {
+            return redirect()->back()->with(['error'=>'非法操作,你不是任务的发布者不能操作！']);
+        }
+
+        $saveRst = TaskModel::where('id', $id)->where('status', '<', 7)->update(['status' => 9]);
+        if(!$saveRst){
+            return redirect()->back()->with(['error'=>'停止当前任务失败！']);
+        }else{
+            return redirect()->back()->with(['error'=>'停止当前任务成功！']);
+        }
     }
 
     /**
@@ -527,15 +544,15 @@ class DetailController extends IndexController
             return ['able' => false, 'errMsg' => '当前任务还未开始投稿！'];
         }
         //判断当前用户是否登录
-        if (!isset($this->user['id'])) {
+        if (!Session::has('AuthUserInfo.id')) {
             return ['able' => false, 'errMsg' => '请登录后再操作！'];
         }
         //判断用户是否为当前任务的投稿人，如果已经是的，就不能投稿
-        if (WorkModel::isWorker($this->user['id'], $task_id)) {
+        if (WorkModel::isWorker(Session::get('AuthUserInfo.id'), $task_id)) {
             return ['able' => false, 'errMsg' => '你已经投过稿了'];
         }
         //判断当前用户是否为任务的发布者，如果是用户的发布者，就不能投稿
-        if (TaskModel::isEmployer($task_id, $this->user['id']))
+        if (TaskModel::isEmployer($task_id, Session::get('AuthUserInfo.id')))
         {
             return ['able' => false, 'errMsg'=>'你是任务发布者不能投稿！'];
         }
@@ -608,7 +625,8 @@ class DetailController extends IndexController
             ->with('users')
             ->get()->toArray();
         //给头像加绝对路径
-        $domain = \CommonClass::getDomain();
+        //$domain = \CommonClass::getDomain();
+        $domain = env('AUATAR_URL');
         foreach($workComment as $k=>$v)
         {
             $workComment[$k]['avatar_md5'] = $domain.'/'.$v['user']['avatar'];
@@ -633,10 +651,10 @@ class DetailController extends IndexController
     {
         $data = $request->except('_token');
         $data['comment'] = htmlspecialchars($data['comment']);
-        $data['uid'] = $this->user['id'];
-        $user = UserDetailModel::where('uid',$this->user['id'])->first();
-        $users = UserModel::where('id',$this->user['id'])->first();
-        $data['nickname'] = $users['name'];
+        $data['uid'] = Session::get('AuthUserInfo.id');
+        //$user = UserDetailModel::where('uid', $this->user['id'])->first();
+        //$users = UserModel::where('id',$this->user['id'])->first();
+        $data['nickname'] = Session::get('AuthUserInfo.nick_name');
 
         $data['created_at'] = date('Y-m-d H:i:s',time());
 
@@ -645,9 +663,9 @@ class DetailController extends IndexController
 
         if(!$result) return response()->json(['errCode'=>0,'errMsg'=>'提交回复失败！']);
         //查询回复数据
-        $comment_data = WorkCommentModel::where('id',$result['id'])->with('parentComment')->with('user')->with('users')->first()->toArray();
-        $domain = \CommonClass::getDomain();
-        $comment_data['avatar_md5'] = $domain.'/'.$user['avatar'];
+        $comment_data = WorkCommentModel::where('id', $result['id'])->with('parentComment')->with('user')->with('users')->first()->toArray();
+        //$domain = \CommonClass::getDomain();
+        $comment_data['avatar_md5'] = env('AUATAR_URL') . Session::get('AuthUserInfo.avatar_url');
 
         if(is_array($comment_data['parent_comment']))
         {
@@ -950,7 +968,7 @@ class DetailController extends IndexController
     /**
      * ajax分页投稿内容
      */
-    public function ajaxPageWorks($id,Request $request)
+    public function ajaxPageWorks(Request $request, $id)
     {
         $this->initTheme('ajaxpage');
         $data = $request->all();
@@ -963,11 +981,11 @@ class DetailController extends IndexController
         if($detail['status']>2)
         {
             //判断当前角色是否是投稿人
-            if(WorkModel::isWorker($this->user['id'],$detail['id']))
+            if(WorkModel::isWorker(Session::get('AuthUserInfo.id'), $detail['id']))
             {
                 $user_type = 2;
                 //判断用户投稿人是否入围
-                $is_win_bid = WorkModel::isWinBid($id,$this->user['id']);
+                $is_win_bid = WorkModel::isWinBid($id, Session::get('AuthUserInfo.id'));
             }
             //判断当前的角色是否是发布人,任务角色的优先级最高
             if($detail['uid']==$this->user['id'])

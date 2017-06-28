@@ -52,7 +52,7 @@
                         <li class="row">
                             <div class="col-md-10 g-userborbtm"></div>
                             <div class="g-reletimeli"><b>{{ date('m-d',strtotime($value['created_at'])) }}</b><span><i></i></span></div>
-                            <div class="col-md-1"><img src="{{ CommonClass::getDomain().'/'.CommonClass::getAvatar($value['uid']) }}" onerror="onerrorImage('{{ Theme::asset()->url('images/default_avatar.png')}}',$(this))"></div>
+                            <div class="col-md-1"><img src="{{ env('AUATAR_URL') . CommonClass::getAvatar($value['uid']) }}" onerror="onerrorImage('{{ Theme::asset()->url('images/default_avatar.png')}}',$(this))"></div>
                             <div class="col-md-11">
                                 <div class="col-md-9">
                                     <div class="text-size14 cor-gray51"><span class="cor-orange">￥{{ $value['bounty'] }}</span>&nbsp;&nbsp;<a class="cor-blue42" href="">{{ $value['title'] }}</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;{{ $value['status_text'] }}</div>
@@ -61,7 +61,7 @@
                                     <div class="space-6"></div>
                                     <p class="cor-gray51">{!! str_limit(strip_tags(htmlspecialchars_decode($value['desc'])),120) !!}</p>
                                     <div class="space-2"></div>
-                                    <div class="g-userlabel">@if($value['cate_name'])<a href="">{{ $value['cate_name'] }}</a>@endif<a href="">湖北武汉</a></div>
+                                    <div class="g-userlabel">@if($value['cate_name'])<a href="">{{ $value['cate_name'] }}</a>@endif<a href="">北京市</a></div>
                                 </div>
                                 <div class="col-md-3 text-right"><a class="btn-big bg-blue bor-radius2 hov-blue1b" target="_blank" href="/task/{{ $value['id'] }}">查看</a></div>
                             </div>

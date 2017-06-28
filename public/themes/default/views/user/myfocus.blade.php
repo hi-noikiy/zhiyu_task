@@ -20,7 +20,7 @@
     <div class="clearfix" id="task-focus-{{ $v['focus_id'] }}">
         <div class="col-sm-1 col-xs-2">
             <div class="row" >
-                <img class=" pull-left img-responsive img-circle" style="width:60px;height:60px;border-radius:100%;" src="{{ CommonClass::getDomain().'/'.CommonClass::getAvatar($v['uid']) }}" onerror="onerrorImage('{{ Theme::asset()->url('images/defauthead.png')}}',$(this))" alt="...">
+                <img class=" pull-left img-responsive img-circle" style="width:60px;height:60px;border-radius:100%;" src="{{ env('AUATAR_URL').'/'.CommonClass::getAvatar($v['uid']) }}" onerror="onerrorImage('{{ Theme::asset()->url('images/defauthead.png')}}',$(this))" alt="...">
             </div>
         </div>
         <div class="col-sm-11 col-xs-10 s-myborder">

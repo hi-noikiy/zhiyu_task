@@ -8,6 +8,7 @@ Route::group(['prefix' => 'task','middleware' => ['auth', 'IsEmployer']], functi
 
 	Route::get('/bounty/{id}','IndexController@bounty')->name('bountyPage');
 	Route::get('/pay/passer/{id}','IndexController@passer')->name('payPasser');
+	Route::get('/stopThisTask/{id}','DetailController@stopThisTask')->name('stopThisTask');
 });
 
 
@@ -24,9 +25,16 @@ Route::group(['prefix' => 'task','middleware' => 'auth'], function() {
 	Route::get('/tasksuccess/{id}','IndexController@tasksuccess')->name('tasksuccess');
 	
 	Route::post('/workCreate','DetailController@workCreate')->name('workCreate');
-	Route::get('/workdelivery/{id}','DetailController@work')->name('workdeliveryPage');
 
+	
+	Route::get('/workdelivery/{id}','DetailController@work')->name('workdeliveryPage');
 	Route::post('/ajaxAttatchment','DetailController@ajaxWorkAttatchment')->name('ajaxCreateAttatchment');
+	
+	
+	
+	
+	
+	
 	Route::get('/delAttatchment','DetailController@delAttatchment')->name('attatchmentDelete');
 	Route::get('/winBid/{work_id}/{task_id}','DetailController@winBid')->name('winBid');
 	Route::get('/download/{id}','DetailController@download')->name('download');

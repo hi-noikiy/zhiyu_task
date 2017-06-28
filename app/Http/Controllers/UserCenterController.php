@@ -10,6 +10,7 @@ use App\Modules\User\Model\UserDetailModel;
 use App\Modules\User\Model\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 
 class UserCenterController extends BasicController
 {
@@ -25,11 +26,11 @@ class UserCenterController extends BasicController
         }
 
         //前端头部
-        if (Auth::check()){
-            $user = Auth::User();
+        if (Session::has('AuthUserInfo')){
+            $user = Session::get('AuthUserInfo');
 
-            $userDetail = UserDetailModel::select('alternate_tips','avatar')->where('uid', $user->id)->first();
-            $this->theme->set('username', $user->name);
+            $userDetail = UserDetailModel::select('alternate_tips','avatar')->where('uid', $user['id'])->first();
+            $this->theme->set('username', $user['nick_name']);
             $this->theme->set('tips', empty($userDetail)?'':$userDetail->alternate_tips); // 支付提示， 默认支持
             $this->theme->set('avatar',empty($userDetail)?'':$userDetail->avatar); // 头像
 
@@ -49,9 +50,9 @@ class UserCenterController extends BasicController
             PRIMARY KEY (`id`)
             ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
              * */
-            $systemMessage =  MessageReceiveModel::where('js_id', $user->id)->where('message_type',1)->where('status',0)->count();
-            $tradeMessage =  MessageReceiveModel::where('js_id',$user->id)->where('message_type',2)->where('status',0)->count();
-            $receiveMessage =  MessageReceiveModel::where('js_id',$user->id)->where('message_type',3)->where('status',0)->count();
+            $systemMessage =  MessageReceiveModel::where('js_id', $user['id'])->where('message_type',1)->where('status',0)->count();
+            $tradeMessage =  MessageReceiveModel::where('js_id', $user['id'])->where('message_type',2)->where('status',0)->count();
+            $receiveMessage =  MessageReceiveModel::where('js_id', $user['id'])->where('message_type',3)->where('status',0)->count();
             $this->theme->set('system_message_count',$systemMessage);
             $this->theme->set('trade_message_count',$tradeMessage);
             $this->theme->set('receive_message_count',$receiveMessage);
@@ -86,7 +87,7 @@ class UserCenterController extends BasicController
         }else{
             $contact = 2;
         }
-        $this->theme->set('is_IM_open',$contact);
+        $this->theme->set('is_IM_open', $contact);
     }
 
 

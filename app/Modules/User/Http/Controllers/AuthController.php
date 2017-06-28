@@ -17,6 +17,7 @@ use App\Modules\User\Model\UserModel;
 use Illuminate\Http\Request;
 use Auth;
 use Crypt;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends UserCenterController
 {
@@ -130,7 +131,11 @@ class AuthController extends UserCenterController
     public function getPayList()
     {
         $this->theme->setTitle('支付认证');
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
         //查询认证记录数
         $bankAuth = BankAuthModel::where('uid', $user->id)->count();
         $alipayAuth = AlipayAuthModel::where('uid', $user->id)->count();
@@ -148,7 +153,11 @@ class AuthController extends UserCenterController
     {
          $this->theme->setTitle('实名认证');
 
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
         $realnameInfo = RealnameAuthModel::where('uid', $user->id)->orderBy('created_at', 'desc')->first();
 
         $data = array();
@@ -218,29 +227,33 @@ class AuthController extends UserCenterController
         }
 
         if (!empty($error)) {
-            return back()->withErrors($error)->withInput();
+            return back()->withInput()->withErrors($error);
         }
 
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
 
         $now = time();
 
         $realnameInfo['uid'] = $user->id;
-        $realnameInfo['username'] = $user->name;
+        $realnameInfo['username'] = $user->nick_name;
         $realnameInfo['realname'] = $request->get('realname');
         $realnameInfo['card_number'] = $request->get('card_number');
         $realnameInfo['created_at'] = date('Y-m-d H:i:s', $now);
         $realnameInfo['updated_at'] = date('Y-m-d H:i:s', $now);
 
         $authRecordInfo['uid'] = $user->id;
-        $authRecordInfo['username'] = $user->name;
+        $authRecordInfo['username'] = $user->nick_name;
         $authRecordInfo['auth_code'] = 'realname';
 
         $RealnameAuthModel = new RealnameAuthModel();
         $status = $RealnameAuthModel->createRealnameAuth($realnameInfo, $authRecordInfo);
 
         if ($status)
-            return redirect('user/realnameAuth');
+            return redirect('user/realnameAuth')->withError('上传成功！');
     }
 
     /**
@@ -251,7 +264,11 @@ class AuthController extends UserCenterController
     public function reAuthRealname()
     {
         $this->theme->setTitle('实名认证');
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
         $realnameInfo = RealnameAuthModel::where('uid', $user->id)->where('status', 2)->orderBy('created_at', 'desc')->first();
 
         if ($realnameInfo){
@@ -317,7 +334,11 @@ class AuthController extends UserCenterController
      */
     public function postBankAuth(BankAuthRequest $request)
     {
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
         $userDetail = UserDetailModel::where('uid', $user->id)->first();
         //检测用户是否实名认证
         /*$realnameAuth = AuthRecordModel::checkUserAuth($user->id, 'realname');
@@ -330,7 +351,7 @@ class AuthController extends UserCenterController
         $authRecordInfo = array();
         $now = time();
         $bankAuthInfo['uid'] = $user->id;
-        $bankAuthInfo['username'] = $user->name;
+        $bankAuthInfo['username'] = $user->nick_name;
         $bankAuthInfo['realname'] = $userDetail['realname'];
         $bankAuthInfo['bank_name'] = $request->get('bankname');
         $bankAuthInfo['bank_account'] = $request->get('bankAccount');
@@ -340,7 +361,7 @@ class AuthController extends UserCenterController
         $bankAuthInfo['updated_at'] = date('Y-m-d H:i:s', $now);
 
         $authRecordInfo['uid'] = $user->id;
-        $authRecordInfo['username'] = $user->name;
+        $authRecordInfo['username'] = $user->nick_name;
         $authRecordInfo['auth_code'] = 'bank';
         //写入银行认证及认证记录表
         $status = BankAuthModel::createBankAuth($bankAuthInfo, $authRecordInfo);
@@ -358,7 +379,11 @@ class AuthController extends UserCenterController
     {
         $this->theme->setTitle('银行认证');
         $bankAuthId = Crypt::decrypt($bankAuthId);
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
 
         $authInfo = BankAuthModel::where('id', $bankAuthId)->where('uid', $user->id)->first();
         if (!empty($authInfo)){
@@ -494,11 +519,15 @@ class AuthController extends UserCenterController
     public function postAlipayAuth(AlipayAuthRequest $request)
     {
         //写入认证记录表和支付宝认证表
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
         $userDetail = UserDetailModel::where('uid', $user->id)->first();
         $alipayAuthInfo = array();
         $alipayAuthInfo['uid'] = $user->id;
-        $alipayAuthInfo['username'] = $user->name;
+        $alipayAuthInfo['username'] = $user->nick_name;
         $alipayAuthInfo['realname'] = $userDetail['realname'];
         $alipayAuthInfo['alipay_name'] = $request->get('alipayName');
         $alipayAuthInfo['alipay_account'] = $request->get('alipayAccount');
@@ -507,7 +536,7 @@ class AuthController extends UserCenterController
 
         $authRecordInfo = array();
         $authRecordInfo['uid'] = $user->id;
-        $authRecordInfo['username'] = $user->name;
+        $authRecordInfo['username'] = $user->nick_name;
         $authRecordInfo['auth_code'] = 'alipay';
 
         $status = AlipayAuthModel::createAlipayAuth($alipayAuthInfo, $authRecordInfo);
@@ -528,7 +557,11 @@ class AuthController extends UserCenterController
         $this->theme->setTitle('支付宝认证');
         $alipayAuthId = Crypt::decrypt($alipayAuthId);
         //查找认证信息
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
         $alipayAuthInfo = AlipayAuthModel::where('id', $alipayAuthId)->where('uid', $user->id)->first();
 
         if (!empty($alipayAuthInfo)){
@@ -565,7 +598,12 @@ class AuthController extends UserCenterController
         $this->theme->setTitle('支付宝认证');
         $authId = Crypt::decrypt($request->get('alipayAuthId'));
         //查询认证信息
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
         $alipayAuthInfo = AlipayAuthModel::where('uid', $user->id)->where('id', $authId)->first();
 
         if ($alipayAuthInfo) {
@@ -596,7 +634,11 @@ class AuthController extends UserCenterController
     {
         $this->theme->setTitle('支付宝认证');
 
-        $user = Auth::User();
+        //$user = Auth::User();
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
 
         $arrAlipayAuth = AlipayAuthModel::where('uid', $user->id)->get();
 

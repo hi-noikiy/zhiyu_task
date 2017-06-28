@@ -39,6 +39,7 @@
                 </a>
             </div>
         </div>
+
         <div class="space-20"></div>
         @if(count($my_tasks['data'])>0)
         <ul class="g-reletimeline" id="task_axis">
@@ -52,7 +53,7 @@
                 <li class="row">
                 <div class="col-md-10 g-userborbtm"></div>
                 <div class="g-reletimeli"><b>{{ date('m-d',strtotime($value['created_at'])) }}</b><span><i></i></span></div>
-                <div class="col-md-1"><img src="@if(Theme::get('avatar')) {{CommonClass::getDomain().'/'.Theme::get('avatar')}} @else {!! Theme::asset()->url('images/default_avatar.png') !!} @endif " onerror="onerrorImage('{{ Theme::asset()->url('defauthead.png')}}',$(this))"></div>
+                <div class="col-md-1"><img src="@if(Theme::get('avatar')) {{ env('AUATAR_URL').'/'.Theme::get('avatar')}} @else {!! Theme::asset()->url('images/default_avatar.png') !!} @endif " onerror="onerrorImage('{{ Theme::asset()->url('defauthead.png')}}',$(this))"></div>
                 <div class="col-md-11">
                     <div class="col-md-9">
                         <div class="text-size14 cor-gray51"><span class="cor-orange">￥{{ $value['bounty'] }}</span>&nbsp;&nbsp;<a target="_blank" class="cor-blue42" href="">{{ $value['title'] }}</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;@if(isset($value['status_text'])){{ $value['status_text'] }}@endif</div>

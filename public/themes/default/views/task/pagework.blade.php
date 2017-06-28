@@ -10,11 +10,11 @@
     @foreach($works['data'] as $v)
         <div class="bidrecords">
             <div class="evaluate row">
-                <div class="col-md-1 evaluateimg"><img src="{{ CommonClass::getDomain().'/'.CommonClass::getAvatar($v['uid']) }}" onerror="onerrorImage('{{ Theme::asset()->url('images/defauthead.png')}}',$(this))"></div>
+                <div class="col-md-1 evaluateimg"><img src="@if($v['avatar']) {{ env('AUATAR_URL') . $v['avatar'] }} @else{{ $domain.'/'.CommonClass::getAvatar($v['uid']) }}@endif" onerror="onerrorImage('{{ Theme::asset()->url('images/defauthead.png')}}',$(this))"></div>
                 <div class="col-md-11 evaluatemain">
                     <div class="evaluateinfo clearfix">
                         <div class="pull-left">
-                            <p><b>{{ $v['nickname'] }}</b> | 好评率：<span class="text-orange">{{ CommonClass::applauseRate($v['uid']) }}%</span></p>
+                            <p><b>{{ $v['user_name'] }}</b> | 好评率：<span class="text-orange">{{ CommonClass::applauseRate($v['uid']) }}%</span></p>
                             <p class="evaluatetime">提交于{{ $v['created_at'] }}</p>
                         </div>
                         @if(($detail['status']==4 || $detail['status']==5) && $user_type==1 && $v['status']==0)
@@ -32,7 +32,7 @@
                                                 </span>
                                             </div>
                                             <div class="modal-body text-center">
-                                                <p class="h5">确定将“<span class="text-primary">{{ $v['nickname'] }}</span>”设置为中标吗？</p>
+                                                <p class="h5">确定将“<span class="text-primary">{{ $v['user_name'] }}</span>”设置为中标吗？</p>
                                                 <div class="space"></div>
                                                 <p><button class="btn btn-primary win-bid" type="button" task_id="{{ $detail['id'] }}" work_id="{{ $v['id'] }}" onclick="winBid($(this))" data-dismiss="modal">确定</button> <button class="btn" type="button" data-dismiss="modal">取消</button></p>
                                             </div>

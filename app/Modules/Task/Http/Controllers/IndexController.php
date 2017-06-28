@@ -225,6 +225,8 @@ class IndexController extends BasicIndexController
     {
         $data = $request->except('_token');
         $data['uid'] = Session::get('AuthUserInfo.id');
+        $data['username'] = Session::get('AuthUserInfo.nick_name');
+        $data['avatar'] = Session::get('AuthUserInfo.avatarUrl');
         $data['desc'] = \CommonClass::removeXss($data['description']);
         $data['created_at'] = date('Y-m-d H:i:s', time());
         $data['begin_at'] = preg_replace('/([\x80-\xff]*)/i', '', $data['begin_at']);

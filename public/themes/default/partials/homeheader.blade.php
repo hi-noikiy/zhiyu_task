@@ -13,6 +13,7 @@
                 </div>
                 <div class="pull-right">
                     <ul class="pull-left g-taskbarlist hidden-sm hidden-xs">
+                        @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                         <li class="pull-left g-taskbarli"><a class="g-taskbar1 g-taskbarbor" href="/user/myTasksList">我是雇主 <i
                                         class="fa fa-caret-down"></i></a>
                             <div class="g-taskbardown1">
@@ -20,12 +21,14 @@
                                 <div><a class="cor-blue2f" href="/user/myTasksList">我发布的任务<span class="red">@if(Theme::get('my_task') > 0){!! Theme::get('my_task') !!} @endif</span></a></div>
                             </div>
                         </li>
+                        @else
                         <li class="pull-left g-taskbarli"><a class="g-taskbar2 g-taskbarbor" href="/user/acceptTasksList">我是威客 <i class="fa fa-caret-down"></i></a>
                             <div class="g-taskbardown1">
                                 <div><a class="cor-blue2f" href="/user/personCase">我的空间</a></div>
                                 <div><a class="cor-blue2f" href="/user/myTask">我的任务<span class="red">@if(Theme::get('my_focus_task') > 0){!! Theme::get('my_focus_task') !!} @endif</span></a></div>
                             </div>
                         </li>
+                        @endif
                         <li class="pull-left"><a class="g-taskbarbor" @if(!empty(Theme::get('help_center')))href="/article/aboutUs/{!! Theme::get('help_center') !!}"@endif>帮助中心</a></li>
                         <li class="pull-left g-taskbarli"><a class="g-nomdright g-taskbarbor" href="javascript:;">分类导航 <i
                                         class="fa fa-caret-down"></i></a>
@@ -66,13 +69,14 @@
                                         </span></a></div>
                             </div>
                         </li>
-                        @endif
+                        @else
                         <li class="pull-left g-taskbarli"><a class="g-taskbar2 g-taskbarbor" href="/user/acceptTasksList">我是威客 <i class="fa fa-caret-down"></i></a>
                             <div class="g-taskbardown1">
                                 <div><a class="cor-blue2f" href="/user/personCase">我的空间</a></div>
                                 <div><a class="cor-blue2f" href="/user/myTask">我的任务<span class="red">@if(Theme::get('my_focus_task') > 0){!! Theme::get('my_focus_task') !!} @endif</span></a></div>
                             </div>
                         </li>
+                        @endif
                         <li class="pull-left"><a class="g-taskbarbor" @if(!empty(Theme::get('help_center')))href="/article/aboutUs/{!! Theme::get('help_center') !!}"@endif>帮助中心</a></li>
                         <li class="pull-left g-taskbarli"><a class="g-nomdright g-taskbarbor" href="javascript:;">分类导航 <i
                                         class="fa fa-caret-down"></i></a>
@@ -310,8 +314,10 @@
                                         <input type="text" name="keywords" class="input-boxshaw form-control-feedback-btn form-control bor-radius2 hidden-sm hidden-xs" value="@if(!empty(request('keywords'))){!! request('keywords') !!}@endif">
                                         <a href="/task/create" type="submit" class="btn btn-default f-click cor-blue bor-radius2 hidden-lg hidden-md">发布任务</a>
                                     </div>
+                                    @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                                     <span class="hidden-md hidden-xs hidden-sm">&nbsp;&nbsp;<span class="u-tit">或</span>&nbsp;&nbsp;
                                     <a href="/task/create" type="submit" class="btn btn-default f-click cor-blue bor-radius2">发布任务</a></span>
+                                    @endif
                                 </form>
                             </li>
                             <li class="s-sign clearfix hidden-md hidden-xs hidden-sm navactiveImg">

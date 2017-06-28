@@ -13,7 +13,7 @@
                     @if($introduce['backgroundurl']=="")
                         <img src="{!! Theme::asset()->url('images/personal_back.png') !!}" alt="" class="personal-info-back-pic" id="backgroud-img2">
                     @else()
-                        <img src="{!!  $domain.'/'.$introduce['backgroundurl'] !!}" class="personal-info-back-pic" id="backgroud-img2"/>
+                        <img src="{!!  '/'.$introduce['backgroundurl'] !!}" class="personal-info-back-pic" id="backgroud-img2"/>
                         @endif()
                                 <!-- 切换背景 -->
                         <div class="personal-info-words">

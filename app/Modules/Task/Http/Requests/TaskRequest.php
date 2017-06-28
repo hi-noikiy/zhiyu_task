@@ -25,12 +25,12 @@ class TaskRequest extends FormRequest
 		$bounty  = json_encode($this->only('bounty'));
 		$begin_at = json_encode($this->only('begin_at'));
 
-		
 		if(!empty($type_id))
 		{
 			$this->task_bounty_min_limit = \CommonClass::getConfig('task_bounty_min_limit');
 			$this->task_bounty_max_limit = \CommonClass::getConfig('task_bounty_max_limit');
-			$rules = array_add($rules, 'bounty', "required|bounty_max|bounty_min");
+			//$rules = array_add($rules, 'bounty', "required|bounty_max|bounty_min");
+			$rules = array_add($rules, 'bounty', "required");
 			$rules = array_add($rules, 'worker_num', 'required|positive');
 			$rules = array_add($rules, 'delivery_deadline', "required|deliveryDeadline:$bounty,$begin_at");
 			$rules = array_add($rules, 'begin_at', 'required|beginAt');

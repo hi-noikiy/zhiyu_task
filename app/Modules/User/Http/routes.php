@@ -26,31 +26,41 @@ Route::group(['middleware' => 'AlreadyLogin'], function(){
 Route::post('login', 'Auth\AuthController@postLogin')->name('loginCreate');
 Route::get('logout', 'Auth\AuthController@getLogout')->name('logout');
 
-//第三方登录
-Route::get('oauth/{type}', 'Auth\AuthController@oauthLogin');
-Route::get('oauth/{type}/callback', 'Auth\AuthController@handleOAuthCallBack');
 
-//用户注册 路由
-Route::get('register', 'Auth\AuthController@getRegister')->name('registerCreatePage');
-Route::post('register', 'Auth\AuthController@postRegister')->name('registerCreate');
+
+
+
+// 禁止访问
+Route::group(['middleware' => 'NoAccess'], function (){
+
+    //第三方登录
+    Route::get('oauth/{type}', 'Auth\AuthController@oauthLogin');
+    Route::get('oauth/{type}/callback', 'Auth\AuthController@handleOAuthCallBack');
+    
+    //用户注册 路由
+    Route::get('register', 'Auth\AuthController@getRegister')->name('registerCreatePage');
+    Route::post('register', 'Auth\AuthController@postRegister')->name('registerCreate');
+
+    //找回密码请求路由
+    Route::get('password/email', 'Auth\PasswordController@getEmail')->name('getPasswordPage');
+    Route::post('password/email', 'Auth\PasswordController@postEmail')->name('passwordUpdate');
+    Route::get('password/reSendEmail/{email}', 'Auth\PasswordController@reSendPasswordEmail')->name('reSendPasswordEmail');
+    Route::post('password/checkEmail', 'Auth\PasswordController@checkEmail')->name('checkEmail');
+    Route::post('password/checkCode', 'Auth\PasswordController@checkCode')->name('checkCode');
+
+    //重置密码请求路由
+    Route::get('resetValidation/{validationInfo}', 'Auth\PasswordController@resetValidation')->name('passwordResetValidation');
+    Route::get('passwordFail', 'Auth\PasswordController@passwordFail');
+    Route::get('waitValidation/{email}', 'Auth\PasswordController@waitValidation')->name('waitValidationPage');
+    Route::get('password/reset', 'Auth\PasswordController@getReset');
+    Route::post('password/reset', 'Auth\PasswordController@postReset')->name('nameResetCreate');
+});
+
 
 //用户账号 验证
 Route::get('activeEmail/{validationInfo}', 'Auth\AuthController@activeEmail');
 Route::get('waitActive/{email}', 'Auth\AuthController@waitActive');
 
-//找回密码请求路由
-Route::get('password/email', 'Auth\PasswordController@getEmail')->name('getPasswordPage');
-Route::post('password/email', 'Auth\PasswordController@postEmail')->name('passwordUpdate');
-Route::get('password/reSendEmail/{email}', 'Auth\PasswordController@reSendPasswordEmail')->name('reSendPasswordEmail');
-Route::post('password/checkEmail', 'Auth\PasswordController@checkEmail')->name('checkEmail');
-Route::post('password/checkCode', 'Auth\PasswordController@checkCode')->name('checkCode');
-
-//重置密码请求路由
-Route::get('resetValidation/{validationInfo}', 'Auth\PasswordController@resetValidation')->name('passwordResetValidation');
-Route::get('passwordFail', 'Auth\PasswordController@passwordFail');
-Route::get('waitValidation/{email}', 'Auth\PasswordController@waitValidation')->name('waitValidationPage');
-Route::get('password/reset', 'Auth\PasswordController@getReset');
-Route::post('password/reset', 'Auth\PasswordController@postReset')->name('nameResetCreate');
 
 Route::get('flushCode', 'Auth\AuthController@flushCode')->name('flushCode');
 Route::post('checkUserName', 'Auth\AuthController@checkUserName')->name('checkUserName');
@@ -200,13 +210,6 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
 
 
 
-
-
-
-    //我的店铺设置
-    Route::get('/shop', 'ShopController@getShop')->name('userShop');
-    //保存店铺信息
-    Route::post('/shop', 'ShopController@postShopInfo')->name('postShop');
     //ajax获取地区二级、三级信息
     Route::post('/ajaxGetCity', 'ShopController@ajaxGetCity')->name('ajaxGetCity');
     //ajax获取地区三级信息
@@ -246,19 +249,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
     Route::get('/waitServiceHandle/{id}', 'ServiceController@waitServiceHandle')->name('waitServiceHandle');//店铺发布服务等待页面
     Route::post('/servicecashvalid', 'ServiceController@serviceCashValid')->name('serviceCashValid');//店铺发布服务验证金额
 
-    //店铺发布商品页面
-    Route::get('/pubGoods', 'GoodsController@getPubGoods')->name('getPubGoods');
-    //发布商品处理
-    Route::post('/pubGoods', 'GoodsController@postPubGoods')->name('postPubGoods');
-    //成功发布商品等待审核
-    Route::get('waitGoodsHandle/{id}', 'GoodsController@waitGoodsHandle');
-    //店铺商品管理
-    Route::get('/goodsShop', 'GoodsController@shopGoods')->name('shopGoods');
-    //店铺编辑商品页面
-    Route::get('/editGoods/{id}', 'GoodsController@editGoods')->name('editGoods');
-    //店铺商品编辑保存信息
-    Route::post('/postEditGoods', 'GoodsController@postEditGoods')->name('postEditGoods');
-    Route::post('/goodsCashValid', 'GoodsController@goodsCashValid')->name('goodsCashValid');//店铺发布商品验证金额
+
 
     //（我是威客 我购买的商品列表）
     Route::get('/myBuyGoods', 'GoodsController@myBuyGoods')->name('myBuyGoods');
@@ -285,4 +276,23 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
     Route::get('/myquestion', 'QuestionController@myQuestion')->name('myquestion');
 });
 
+Route::group(['prefix' => 'user', 'middleware' => ['NoAccess', 'auth']], function () {
+    //我的店铺设置
+    Route::get('/shop', 'ShopController@getShop')->name('userShop');
+    //保存店铺信息
+    Route::post('/shop', 'ShopController@postShopInfo')->name('postShop');
+    //店铺发布商品页面
+    Route::get('/pubGoods', 'GoodsController@getPubGoods')->name('getPubGoods');
+    //发布商品处理
+    Route::post('/pubGoods', 'GoodsController@postPubGoods')->name('postPubGoods');
+    //成功发布商品等待审核
+    Route::get('waitGoodsHandle/{id}', 'GoodsController@waitGoodsHandle');
+    //店铺商品管理
+    Route::get('/goodsShop', 'GoodsController@shopGoods')->name('shopGoods');
+    //店铺编辑商品页面
+    Route::get('/editGoods/{id}', 'GoodsController@editGoods')->name('editGoods');
+    //店铺商品编辑保存信息
+    Route::post('/postEditGoods', 'GoodsController@postEditGoods')->name('postEditGoods');
+    Route::post('/goodsCashValid', 'GoodsController@goodsCashValid')->name('goodsCashValid');//店铺发布商品验证金额
+});
 

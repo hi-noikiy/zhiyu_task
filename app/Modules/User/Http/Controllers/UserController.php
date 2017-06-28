@@ -11,6 +11,7 @@ use App\Modules\User\Model\UserDetailModel;
 use App\Modules\User\Model\UserTagsModel;
 use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends UserCenterController
 {
@@ -23,7 +24,13 @@ class UserController extends UserCenterController
     
     public function getPersonCase()
     {
-        $uid = Auth::User()->id;
+        //$uid = Auth::User()->id;
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+        $uid = $user->id;
+
         $userInfo = UserDetailModel::where('uid', $uid)->first();
         
         $tag = UserTagsModel::getTagsByUserId($uid);
@@ -49,9 +56,9 @@ class UserController extends UserCenterController
             'skill_tag' => $tag
         );
         $this->theme->set('TYPE',3);
-        $this->theme->setTitle(Auth::User()->name);
-        $this->theme->set('keywords',Auth::User()->name);
-        $this->theme->set('description',Auth::User()->name);
+        $this->theme->setTitle($user->nick_name);
+        $this->theme->set('keywords', $user->nick_name);
+        $this->theme->set('description', $user->nick_name);
         return $this->theme->scope('user.space.personcase', $data)->render();
     }
 
@@ -59,7 +66,16 @@ class UserController extends UserCenterController
     
     public function getPersonEvaluation()
     {
-        $uid = Auth::User()->id;
+        //$uid = $user->id;
+
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
+        //$uid = Auth::User()->id;
+        $uid = $user->id;
+        
         $userInfo = UserDetailModel::where('uid', $uid)->first();
         
         $tag = UserTagsModel::getTagsByUserId($uid);
@@ -99,16 +115,22 @@ class UserController extends UserCenterController
             'skill_tag' => $tag
         );
         $this->theme->set('TYPE',3);
-        $this->theme->setTitle(Auth::User()->name);
-        $this->theme->set('keywords',Auth::User()->name);
-        $this->theme->set('description',Auth::User()->name);
+        $this->theme->setTitle($user->nick_name);
+        $this->theme->set('keywords', $user->nick_name);
+        $this->theme->set('description', $user->nick_name);
         return $this->theme->scope('user.space.personevaluation', $data)->render();
     }
 
     
     public function getPersonEvaluationDetail($id)
     {
-        $uid = Auth::User()->id;
+        //$user = Auth::User();
+
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+        $uid = $user->id;
         
         $comment = TaskModel::join('cate', 'task.cate_id', '=', 'cate.id')->where('task.id', $id)->first();
         $successCase = SuccessCaseModel::join('cate', 'success_case.cate_id', '=', 'cate.id')->where('success_case.id', $id)->first();
@@ -135,16 +157,23 @@ class UserController extends UserCenterController
             'skill_tag' => $tag
         );
         $this->theme->set('TYPE',3);
-        $this->theme->setTitle(Auth::User()->name);
-        $this->theme->set('keywords',Auth::User()->name);
-        $this->theme->set('description',Auth::User()->name);
+        $this->theme->setTitle($user->nick_name);
+        $this->theme->set('keywords', $user->nick_name);
+        $this->theme->set('description', $user->nick_name);
         return $this->theme->scope('user.space.personevaluationdetail', $data)->render();
     }
 
     
     public function getAddPersonCase($id)
     {
-        $uid = Auth::User()->id;
+        //$user = Auth::User();
+
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+        $uid = $user->id;
+
         $userInfo = UserDetailModel::where('uid', $uid)->first();
         
         $tag = UserTagsModel::getTagsByUserId($uid);
@@ -173,9 +202,9 @@ class UserController extends UserCenterController
 
         );
         $this->theme->set('TYPE',3);
-        $this->theme->setTitle(Auth::User()->name);
-        $this->theme->set('keywords',Auth::User()->name);
-        $this->theme->set('description',Auth::User()->name);
+        $this->theme->setTitle($user->nick_name);
+        $this->theme->set('keywords', $user->nick_name);
+        $this->theme->set('description',$user->nick_name);
         return $this->theme->scope('user.space.addpersoncase', $data)->render();
     }
 
@@ -183,7 +212,11 @@ class UserController extends UserCenterController
     public function postAddCase(Request $request)
     {
         $data = $request->except('_token');
-        $user = Auth::User();
+
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
 
         $file = $request->file('pic');
         if (!$file) {
@@ -198,7 +231,7 @@ class UserController extends UserCenterController
         $data = array(
             'pic' => $result['data']['url'],
             'uid' => $user->id,
-            'username'=>$user->name,
+            'username'=>$user->nick_name,
             'title' => $request->title,
             'desc' =>\CommonClass::removeXss($request->description),
             'type' => 1,
@@ -218,7 +251,14 @@ class UserController extends UserCenterController
     
     public function getEditPersonCase($id)
     {
-        $uid = Auth::User()->id;
+        //$user = Auth::User();
+
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
+        $uid = $user->id;
         $userInfo = UserDetailModel::where('uid', $uid)->first();
         
         $tag = UserTagsModel::getTagsByUserId($uid);
@@ -252,9 +292,9 @@ class UserController extends UserCenterController
 
         );
         $this->theme->set('TYPE',3);
-        $this->theme->setTitle(Auth::User()->name);
-        $this->theme->set('keywords',Auth::User()->name);
-        $this->theme->set('description',Auth::User()->name);
+        $this->theme->setTitle($user->nick_name);
+        $this->theme->set('keywords', $user->nick_name);
+        $this->theme->set('description', $user->nick_name);
         return $this->theme->scope('user.space.editpersoncase', $data)->render();
     }
 
@@ -265,7 +305,13 @@ class UserController extends UserCenterController
         
         $successCase = SuccessCaseModel::join('cate', 'success_case.cate_id', '=', 'cate.id')->where('success_case.id', $data['id'])
             ->select('success_case.*','cate.name','cate.id')->first();
-        $user = Auth::User();
+        //$user = Auth::User();
+
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
         $file = $request->file('pic');
         if ($file) {
             $result = \FileClass::uploadFile($file, 'sys');
@@ -316,7 +362,13 @@ class UserController extends UserCenterController
     
     public function ajaxUpdatePic(Request $request)
     {
-        $user = Auth::User();
+        //$user = Auth::User();
+
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
         $file = $request->back;
 
         $result = \FileClass::uploadFile($file, 'user', array('jpg', 'png', 'jpeg', 'bmp', 'png'));
@@ -338,7 +390,13 @@ class UserController extends UserCenterController
 
     public function ajaxUpdateBack(Request $request)
     {
-        $user = Auth::User();
+        //$user = Auth::User();
+
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
         echo $backgroundurl = $request->src;
         $data = array(
             'backgroundurl' => $backgroundurl
@@ -351,7 +409,14 @@ class UserController extends UserCenterController
     public function ajaxDeleteSuccess(Request $request)
     {
         $id = $request->get('id');
-        $user = Auth::User();
+
+        //$user = Auth::User();
+
+        $user = Session::get('AuthUserInfo');
+        $jsen = json_encode($user);
+        $jsde = json_decode($jsen);
+        $user = $jsde;
+
         $uid = $user->id;
         
         $successCase = SuccessCaseModel::where('id',$id)->where('uid',$uid)->first();

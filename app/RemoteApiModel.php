@@ -105,6 +105,7 @@ class RemoteApiModel extends Model
             'taskSystemTakeInfo' => '/taskSystem/takeInfo',
             'taskSystemGetNewRedPack' => '/taskSystem/getNewRedPack',
             'taskSystemGetNewRedPackInfo' => '/taskSystem/getNewRedPackInfo',
+            'taskSystemtaskSystemRemote' => '/taskSystem/taskSystemRemote',
         ),
         'get' => array(
             'jobInfo' 				=> '/job/info'

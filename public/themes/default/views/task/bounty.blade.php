@@ -46,7 +46,9 @@
                                     <i class="icon-remove"></i>
                                 </button>
                                 您的余额不足，请选择其他支付方式或是去　<a href="/finance/cash" class="btn btn-sm btn-orange34 bor-radius2">充值</a>　<a href="/task/release/{{ $id }}" class="cor-gray93 btn-big1">返回</a>
+                                @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                                 <a href="/task/pay/passer/{{ $id }}" class="btn btn-sm btn-orange34 bor-radius2"> 一键通过 </a>
+                                @endif
                             </div>
                         @endif
                     </div>
@@ -102,6 +104,9 @@
                         <div class="text-center clearfix">
                             <button class="btn btn-primary btn-blue btn-big1 bor-radius2" data-toggle="modal" data-target="#myModal">确认支付</button>
                             <a href="/task/release/{{ $id }}" class="cor-gray93 btn-big">返回</a>
+                            @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
+                                <a href="/task/pay/passer/{{ $id }}" class="btn btn-sm btn-orange34 bor-radius2"> 一键通过 </a>
+                            @endif
                         </div>
                         <div class="space"></div>
                         </form>

@@ -67,7 +67,7 @@
     @if(count($my_tasks)>0)
     @foreach($my_tasks as $v)
         <li class="row width590">
-        <div class="col-sm-1 col-xs-2 usercter"><img src="@if(Theme::get('avatar')) {{CommonClass::getDomain().'/'.Theme::get('avatar')}} @else {!! Theme::asset()->url('images/default_avatar.png') !!} @endif" ></div>
+        <div class="col-sm-1 col-xs-2 usercter"><img src="@if($v['avatar']) {{ env('AUATAR_URL') . $v['avatar'] }} @else {!! Theme::asset()->url('images/default_avatar.png') !!} @endif" ></div>
 
         <div class="col-sm-11 col-xs-10 usernopd">
             <div class="col-sm-9 col-xs-8">

@@ -41,7 +41,7 @@ class TaskController extends ManageController
         $order = $request->get('order') ? $request->get('order') : 'desc';
         $paginate = $request->get('paginate') ? $request->get('paginate') : 10;
 
-        $taskList = TaskModel::select('task.id', 'us.name', 'task.title', 'task.created_at', 'task.status', 'task.verified_at', 'task.bounty_status');
+        $taskList = TaskModel::select('task.id', 'task.username', 'us.name', 'task.title', 'task.created_at', 'task.status', 'task.verified_at', 'task.bounty_status');
 
         if ($request->get('task_title')) {
             $taskList = $taskList->where('task.title','like','%'.$request->get('task_id').'%');
@@ -88,7 +88,7 @@ class TaskController extends ManageController
         $taskList = $taskList->orderBy($by, $order)
             ->leftJoin('users as us', 'us.id', '=', 'task.uid')
         ->paginate($paginate);
-
+        
         $data = array(
             'task' => $taskList,
         );
@@ -247,10 +247,12 @@ class TaskController extends ManageController
         {
             return redirect()->back()->with(['error'=>'当前任务不存在，无法查看稿件！']);
         }
-        $query = TaskModel::select('task.*', 'us.name as nickname', 'ud.avatar','ud.qq')->where('task.id', $id);
+        /*$query = TaskModel::select('task.*', 'us.name as nickname', 'ud.avatar','ud.qq')->where('task.id', $id);
         $taskDetail = $query->join('user_detail as ud', 'ud.uid', '=', 'task.uid')
             ->leftjoin('users as us','us.id','=','task.uid')
-            ->first()->toArray();
+            ->first()->toArray();*/
+
+        $taskDetail = TaskModel::findById($id)->toArray();
         if(!$taskDetail)
         {
              return redirect()->back()->with(['error'=>'当前任务已经被删除！']);

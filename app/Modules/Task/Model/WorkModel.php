@@ -7,6 +7,7 @@ use App\Modules\User\Model\AttachmentModel;
 use App\Modules\User\Model\MessageReceiveModel;
 use App\Modules\User\Model\UserDetailModel;
 use App\Modules\User\Model\UserModel;
+use App\RemoteApiModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -18,7 +19,7 @@ class WorkModel extends Model
 {
     protected $table = 'work';
     public  $timestamps = false;  
-    public $fillable = ['desc','task_id','status','uid','bid_at','created_at'];
+    public $fillable = ['desc','task_id','status','uid','bid_at', 'user_name', 'avatar', 'created_at'];
 
     
     public function childrenAttachment()
@@ -59,9 +60,8 @@ class WorkModel extends Model
     
     static function findAll($id,$data=array())
     {
-        $query = Self::select('work.*','us.name as nickname','a.avatar')
+        $query = Self::select('work.*')
             ->where('work.task_id',$id)->where('work.status','<=',1)->where('forbidden',0);
-        
         if(isset($data['work_type'])){
             switch($data['work_type'])
             {
@@ -75,8 +75,6 @@ class WorkModel extends Model
         }
         $data = $query->with('childrenAttachment')
             ->with('childrenComment')
-            ->join('user_detail as a','a.uid','=','work.uid')
-            ->join('users as us','us.id','=','work.uid')
             ->paginate(5)->setPageName('work_page')->toArray();
         return $data;
     }
@@ -143,7 +141,11 @@ class WorkModel extends Model
             
             Self::where('id',$data['work_id'])->update(['status'=>1]);
 
-            if(($data['win_bid_num']+1)== $data['worker_num'])
+            /*
+            TaskModel::where('id', $data['task_id'])
+                ->update(['status'=>7,'publicity_at'=>date('Y-m-d H:i:s',time()),'checked_at'=>date('Y-m-d H:i:s',time())]);
+
+            if(($data['win_bid_num']+1) == $data['worker_num'])
             {
                 $task_publicity_day = \CommonClass::getConfig('task_publicity_day');
                 if($task_publicity_day==0)
@@ -154,6 +156,7 @@ class WorkModel extends Model
                     TaskModel::where('id',$data['task_id'])->update(['status'=>6,'publicity_at'=>date('Y-m-d H:i:s',time())]);
                 }
             }
+            */
         });
         
         if(is_null($status))
@@ -163,35 +166,51 @@ class WorkModel extends Model
             {
                 $task = TaskModel::where('id',$data['task_id'])->first();
                 $work = WorkModel::where('id',$data['work_id'])->first();
-                $user = UserModel::where('id',$work['uid'])->first();
+                //$user = UserModel::where('id',$work['uid'])->first();
+
+
                 $site_name = \CommonClass::getConfig('site_name');
                 
                 $messageVariableArr = [
-                    'username'=>$user['name'],
+                    'username'=>$work['user_name'],
                     'website'=>$site_name,
                     'task_number'=>$task['id'],
                     'task_title'=>$task['title'],
-                    'win_price'=>$task['bounty']/$task['worker_num'], // 总金额平分中标人数
+                    'win_price'=>$task['bounty'], // 总金额平分中标人数
                 ];
                 $message = MessageTemplateModel::sendMessage('task_win',$messageVariableArr);
                 $data = [
                     'message_title'=>'任务中标通知',
                     'message_content'=>$message,
-                    'js_id'=>$user['id'],
+                    'js_id'=>$work['uid'],
                     'message_type'=>2,
                     'receive_time'=>date('Y-m-d H:i:s',time()),
                     'status'=>0,
                 ];
                 MessageReceiveModel::create($data);
+
+
+                /**
+                 * 远程任务接口
+                 * */
+                $remoteData = array(
+                    'task_id'    => $task['id'],
+                    'task_name'  => $task['title'],
+                    'task_money' => $task['bounty'] * 100,
+                    'uid'        => $work['uid']
+                );
+
+                RemoteApiModel::taskSystemtaskSystemRemote($remoteData);
             }
         }
+
         return is_null($status) ? true : false;
     }
 
     
     static public function findDelivery($id,$data)
     {
-        $query = Self::select('work.*','us.name as nickname','a.avatar')
+        $query = Self::select('work.*')
             ->where('work.task_id',$id)->where('work.status','>=',2);
         
         if(isset($data['evaluate'])){
@@ -208,8 +227,6 @@ class WorkModel extends Model
             }
         }
         $data = $query->with('childrenAttachment')
-            ->join('user_detail as a','a.uid','=','work.uid')
-            ->leftjoin('users as us','us.id','=','work.uid')
             ->paginate(5)->setPageName('delivery_page')->toArray();
         return $data;
     }
@@ -217,11 +234,9 @@ class WorkModel extends Model
     
     static public function findRights($id)
     {
-        $data = Self::select('work.*','us.name as nickname','ud.avatar')
+        $data = Self::select('work.*')
             ->where('task_id',$id)->where('work.status',4)
             ->with('childrenAttachment')
-            ->join('user_detail as ud','ud.uid','=','work.uid')
-            ->leftjoin('users as us','us.id','=','work.uid')
             ->paginate(5)->setPageName('delivery_page')->toArray();
         return $data;
     }

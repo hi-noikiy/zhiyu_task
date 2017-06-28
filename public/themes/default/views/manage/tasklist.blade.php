@@ -85,7 +85,7 @@
                             <td>
                                 <a href="#">{!! $item->id !!}</a>
                             </td>
-                            <td>{!! $item->name !!}</td>
+                            <td>@if($item->name){!! $item->name !!}@else {!! $item->username !!} @endif</td>
                             <td class="hidden-480">
                                 @if($item->status >=2)<a target="_blank" href="/task/{!! $item->id  !!}">{!! $item->title !!}</a>@else{!! $item->title !!} @endif
                             </td>

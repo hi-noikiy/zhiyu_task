@@ -33,6 +33,31 @@ class TestController extends Controller
     {
         $s = Session::get('AuthUserInfo');
         dd($s);
+        dd(Auth::user());
+
+        $createData = array(
+            'id' => 33,
+            'name' => 'mc',
+            'salt' => \CommonClass::random(4),
+            'status' => 1,
+            'validation_code' => \CommonClass::random(6),
+            'last_login_time' => time()
+        );
+        //$rst = User::create($createData);
+        $res = User::find(2);
+        dd($res);
+        dd($createData);
+        /*$remoteData = array(
+            'task_id'    => 1111,
+            'task_name'  => '任务名2',
+            'task_money' => 2,
+            'uid'        => 12906
+        );
+        $userInfo = RemoteApiModel::taskSystemtaskSystemRemote($remoteData);
+        dd($userInfo);
+        */
+
+        dd($_COOKIE);
     }
     public function index1(Request $request){
         $mail = "machuang2264@163.com";

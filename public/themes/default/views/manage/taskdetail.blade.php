@@ -37,7 +37,7 @@
                                                 <label class="col-sm-1 control-label no-padding-right" for="form-field-1"> 发布人： </label>
 
                                                 <div class="col-sm-9">
-                                                    <label class="col-sm-1">{{ $task['nickname'] }}</label>
+                                                    <label class="col-sm-1">{{ $task['username'] }}</label>
                                                     <label class="col-sm-5">手机号：<input type="text" name="phone" value="{{ $task['phone'] }}"/></label>
                                                 </div>
                                             </div>

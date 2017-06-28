@@ -9,8 +9,10 @@ use App\Modules\Manage\Model\ConfigModel;
 use App\Modules\User\Http\Requests\LoginRequest;
 use App\Modules\User\Http\Requests\RegisterRequest;
 use App\Modules\User\Model\OauthBindModel;
+use App\Modules\User\Model\UserDetailModel;
 use App\Modules\User\Model\UserModel;
 use App\RemoteApiModel;
+use App\User;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Validator;
@@ -113,11 +115,47 @@ class AuthController extends IndexController
             );
             $userLoginRst = RemoteApiModel::userLogin($remoteUserData);
             if($userLoginRst['codes'] === 0){
+                $userDetailInfo = UserDetailModel::where('uid', $userLoginRst['data']['id'])->first();
+                if(!$userDetailInfo){
+                    $UserAddData = array(
+                        'uid' => $userLoginRst['data']['id'],
+                        'mobile' => $userLoginRst['data']['mobile'],
+                        'nickname' => $userLoginRst['data']['wx_nick'],
+                        'avatar' => $userLoginRst['data']['avatar_url']
+                    );
+                    UserDetailModel::create($UserAddData);
+                }
+
+                $systemUserInfo = User::find($userLoginRst['data']['id']);
+                if(!$systemUserInfo){
+                    $systemUserCreateData = array(
+                        'id' => $userLoginRst['data']['id'],
+                        'name' => $userLoginRst['data']['wx_nick'],
+                        'salt' => \CommonClass::random(4),
+                        'status' => 1,
+                        'validation_code' => \CommonClass::random(6),
+                        'last_login_time' => date('Y-m-d H:i:s')
+                    );
+                    User::create($systemUserCreateData);
+                }else{
+                    $systemUserInfo->last_login_time = date('Y-m-d H:i:s');
+                    $bool = $systemUserInfo->save();
+                }
+
+
+
+                $loginUserInfo = User::find($userLoginRst['data']['id']);
+                Auth::login($loginUserInfo);
+
+                
+
                 setcookie('UserCookieUid', DecrModel::mc_encode($userLoginRst['data']['id']), time() + 7*24*3600, "/", "yjob.net");
                 setcookie('UserCookieUinionid', DecrModel::mc_encode($userLoginRst['data']['wx_union_id']), time() + 7*24*3600, "/", "yjob.net");
                 if(in_array($userLoginRst['data']['mobile'], Config::get('employer.employer'))){
                     $userLoginRst['data']['employer'] = $userLoginRst['data']['mobile'];
                 }
+                array_key_exists('avatarUrl', $userLoginRst['data']) && $userLoginRst['data']['avatar_url'] = $userLoginRst['data']['avatarUrl'];
+                array_key_exists('avatar_url', $userLoginRst['data']) && $userLoginRst['data']['avatarUrl'] = $userLoginRst['data']['avatar_url'];
                 Session::put('AuthUserInfo', $userLoginRst['data'], 7*24*60);
                 return redirect("task");
             }else{

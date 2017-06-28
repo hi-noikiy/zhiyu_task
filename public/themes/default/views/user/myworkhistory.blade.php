@@ -65,7 +65,7 @@
                     <p class="cor-gray87"><i class="ace-icon fa fa-user bigger-110"></i> {{ $v['nickname'] }} <i class="fa fa-eye"></i> {{ $v['view_count'] }}人浏览/{{ $v['delivery_count'] }}人投稿 <i class="fa fa-clock-o"></i> {{ date('d',strtotime($v['created_at'])) }}天前 <i class="fa fa-unlock-alt"></i> {{ ($v['bounty_status']==1)?'已托管赏金':'待托管赏金' }}</p>
                     <div class="space-4"></div>
                     <p class="cor-gray51">{{ str_limit($v['task_desc'],120) }}</p>
-                    <div class="g-userlabel"><a href="">{{ $v['cate_name'] }}</a><a href="">湖北武汉</a></div>
+                    <div class="g-userlabel"><a href="">{{ $v['cate_name'] }}</a><a href="">北京市</a></div>
                 </div>
                 <div class="col-sm-3 text-right"><a class="btn-big bg-blue bor-radius2" href="">查看</a></div>
             </div>

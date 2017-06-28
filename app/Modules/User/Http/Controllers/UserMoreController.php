@@ -36,7 +36,7 @@ class UserMoreController extends UserCenterController
     public function __construct()
     {
         parent::__construct();
-        $this->user = Auth::user();
+        $this->user = Session::get('AuthUserInfo');
     }
 
     /**
@@ -639,7 +639,7 @@ class UserMoreController extends UserCenterController
                 else{
                     $v['cate_name'] =  '';
                 }
-                $v['nickname'] = $this->user['name'];
+                $v['nickname'] = $this->user['nick_name'];
                 $v['avatar'] = $userInfo->avatar;
                 $taskInfo['data'][$k] = $v;
             }
@@ -918,7 +918,8 @@ class UserMoreController extends UserCenterController
         }
         $my_tasks_group = array();
         $number = 0;
-        $domain = \CommonClass::getDomain();
+        //$domain = \CommonClass::getDomain();
+        $domain = env('AUATAR_URL');
         foreach($tasks_group as $k=>$v)
         {
             foreach($v as $key=>$value)

@@ -6,7 +6,8 @@
     </div>
     <div class="space-16"></div>
     <div class="col-xs-12">
-        <form  class="registerform form-horizontal row" action="{{ URL('user/passwordUpdate') }}" method="post" role="form">
+        {{--<form  class="registerform form-horizontal row" action="{{ URL('user/passwordUpdate') }}" method="post" role="form">--}}
+        <form  class="registerform form-horizontal row" action="http://m.yjob.net/resetpass/index.html" method="get" role="form">
             {!! csrf_field() !!}
             <div class="form-group nomarb">
                 <label class="col-lg-2 col-sm-2 control-label no-padding-right s-safetywrp1" for="form-field-1"> 当前密码&nbsp;&nbsp;</label>

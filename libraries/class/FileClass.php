@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Session;
 use League\Flysystem\Util\MimeType;
 use Illuminate\Support\Facades\DB;
 use \App\Modules\User\Model\AttachmentModel;
@@ -82,7 +83,7 @@ class FileClass
                 $data['name'] = $clientName;
                 $data['type'] = $extension;
                 $data['size'] = $fileSize / 1024;
-                $data['user_id'] = Auth::user()['id'];
+                $data['user_id'] = Session::get('AuthUserInfo.id');
                 $data['disk'] = $disk;
                 return CommonClass::formatResponse('上传成功', 200, $data);
             }

@@ -52,5 +52,8 @@ class Kernel extends HttpKernel
 
         'AlreadyLogin' => \App\Http\Middleware\AlreadyLogin::class,
         'IsEmployer' => \App\Http\Middleware\IsEmployer::class,
+
+        // 禁止访问
+        'NoAccess' => \App\Http\Middleware\NoAccess::class,
     ];
 }

@@ -8,7 +8,7 @@
                 <label for="inputText" class="col-sm-2 control-label no-padding-right s-safetywrp1 s-labelwrp1">用户名&nbsp;&nbsp;</label>
                 <div class="space-6 visible-xs-block"></div>
                 <div class="col-sm-5">
-                    <input type="text" class="form-control inputxt" readonly id="inputText" placeholder="昵称" value="{{ Auth::user()['name'] }}">
+                    <input type="text" class="form-control inputxt" readonly id="inputText" placeholder="昵称" value="{{ $uinfo['nickname'] }}">
                     <div class="space-10"></div>
                 </div>
             </div>
@@ -21,9 +21,9 @@
                 <div class="col-sm-5">
                     <input type="text" class="form-control inputxt" readonly id="inputText"   value="{{ Auth::user()['email'] }}">
                     @if(Auth::user()->email_status == 2)
-                    <span class="Validform_checktip col-sm-6 validform-base Validform_right">邮箱已认证</span>
+                        <span class="Validform_checktip col-sm-6 validform-base Validform_right">邮箱已认证</span>
                     @else
-                    <span class="Validform_checktip  validform-base Validform_wrong">未绑定邮箱 <a href="{!! url('user/emailAuth') !!}">点击绑定</a></span>
+                        <span class="Validform_checktip  validform-base Validform_wrong">未绑定邮箱 <a href="{!! url('user/emailAuth') !!}">点击绑定</a></span>
                     @endif
                 </div>
                 <div class="space-8 visible-xs-block"></div>

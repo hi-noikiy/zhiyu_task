@@ -68,7 +68,7 @@
         @foreach($my_tasks['data'] as $v)
             <li class="row width590">
                 <div class="col-sm-1 col-xs-2 usercter">
-                    <img src="{!! url($v['avatar']) !!}" onerror="onerrorImage('{{ Theme::asset()->url('images/default_avatar.png')}}',$(this))">
+                    <img src="{!! env('AUATAR_URL') . $v['avatar'] !!}" onerror="onerrorImage('{{ Theme::asset()->url('images/default_avatar.png')}}',$(this))">
                 </div>
 
 
@@ -80,7 +80,7 @@
                         <div class="space-6"></div>
                         <p class="cor-gray51 p-space">{!! str_limit(strip_tags(htmlspecialchars_decode($v['desc'])),120) !!}</p>
                         <div class="space-2"></div>
-                        <div class="g-userlabel">@if($v['cate_name'])<a href="">{{ $v['cate_name'] }}</a>@endif<a href="">湖北武汉</a></div>
+                        <div class="g-userlabel">@if($v['cate_name'])<a href="">{{ $v['cate_name'] }}</a>@endif<a href="">北京市</a></div>
                     </div>
                     <div class="col-sm-3 col-xs-4 text-right hiden590"><a class="btn-big bg-blue bor-radius2 hov-blue1b" target="_blank" href="/task/{{ $v['id'] }}">查看</a></div>
                     <div class="col-xs-12"><div class="g-userborbtm"></div></div>

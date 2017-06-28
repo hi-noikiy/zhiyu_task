@@ -13,6 +13,7 @@ use App\Modules\User\Model\UserDetailModel;
 use App\Modules\User\Model\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 
 class IndexController extends BasicController
 {
@@ -27,25 +28,26 @@ class IndexController extends BasicController
         }
 
         //前端头部
-        if (Auth::check()){
-            $user = Auth::User();
+        if (Session::get('AuthUserInfo')){
+            $user = Session::get('AuthUserInfo');
             
-            $userDetail = UserDetailModel::select('alternate_tips','avatar')->where('uid', $user->id)->first();
-            $this->theme->set('username', $user->name);
+            //$userDetail = UserDetailModel::select('alternate_tips','avatar')->where('uid', $user->id)->first();
+            $this->theme->set('username', $user['nick_name']);
             $this->theme->set('tips', empty($userDetail)?'':$userDetail->alternate_tips);
-            $this->theme->set('avatar',empty($userDetail)?'':$userDetail->avatar);
+
+            $this->theme->set('avatar', empty($user['avatar_url'])?'':$user['avatar_url']);
 
             //头部未读消息条数
-            $messageCount = MessageReceiveModel::where('js_id',$user->id)->where('status',0)->count();
+            $messageCount = MessageReceiveModel::where('js_id', $user['id'])->where('status',0)->count();
             $this->theme->set('message_count',$messageCount);
 
             //头部我是雇主
-            $myTask = TaskModel::where('uid',$user->id)->where('bounty_status',1)->count();
-            $this->theme->set('my_task',$myTask);
+            $myTask = TaskModel::where('uid', $user['id'])->where('bounty_status',1)->count();
+            $this->theme->set('my_task', $myTask);
 
             //头部我是威客
-            $myFocusTask = WorkModel::where('uid',$user->id)->count();
-            $this->theme->set('my_focus_task',$myFocusTask);
+            $myFocusTask = WorkModel::where('uid', $user['id'])->count();
+            $this->theme->set('my_focus_task', $myFocusTask);
         }
 
         //前端头部任务类型

@@ -24,11 +24,14 @@
                             <a class="u-infoicon " ></a>
                         @endif
 
-                        @if(Auth::User()->email_status != 2)
+                        {{--@if(Auth::User()->email_status != 2)
                             <a class="u-messageicon"></a>
                         @else
                             <a class="u-messageiconact" ></a>
-                        @endif
+                        @endif--}}
+                            <a class="u-messageicon"></a>
+
+
 
                         @if($auth_user['alipay'] == true)
                             <a  class="u-aliiconact"></a>
@@ -56,6 +59,7 @@
                 <div class="space-4"></div>
                 <p class="text-size20 cor-orange"><b>￥{{ $user_data['balance'] }}</b></p>
                 <div class="space-4"></div>
+                @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                 <div>
                     <a href="/finance/cash" class="btn-big bg-orange bor-radius2 hov-bgorg88" >充值</a>
                     <a href="/finance/cashout" class="btn-big bg-gary bor-radius2 hov-bggryb0" >提现</a>
@@ -65,6 +69,7 @@
                     <a class="text-under" href="/finance/list" target="_blank">查看明细></a>
                     <p class="space-14"></p>
                 </div>
+                @endif
             </div>
             <div class="space-14 col-lg-12 visible-lg-block"></div>
             <div class="g-usersidelist visible-lg-block visible-md-block col-md-4 col-lg-12">
@@ -133,7 +138,11 @@
                             <p class="cor-gray51 text-size14">我有天大的需求</p>
                             <p class="cor-gray51 text-size14">需要大神帮我解决！</p>
                             <div class="space-10"></div>
+                            @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                             <div class="g-userhintbtn"><a href="/task/create">发布任务</a></div>
+                            @else
+                            <div class="g-userhintbtn"><a href="/user/myTask">我的任务</a></div>
+                            @endif
                             <div class="space-20"></div>
                         </div>
                     </div>
@@ -143,8 +152,12 @@
             <div class="g-userhint g-userlist tabbable">
                 <div class="clearfix g-userlisthead">
                     <ul class="pull-left text-size16 nav nav-tabs">
+                        @if(!\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                         <li class="active"><a href="#useraccept" onclick="changeurl($(this))" url="/user/acceptTasksList" data-toggle="tab">我接受的任务</a></li>
+                        @endif
+                        @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                         <div class="pull-left">|</div><li><a onclick="changeurl($(this))"  url="/user/myTasksList" href="#userrelease" data-toggle="tab">我发布的任务</a></li>
+                        @endif
                     </ul>
                     <a id="more-task" class="pull-right hov-corblue2f" href="/user/acceptTasksList" target="_blank">更多</a>
                 </div>

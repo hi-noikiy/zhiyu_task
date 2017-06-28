@@ -25,7 +25,7 @@ class TaskModel extends Model
     protected $fillable = [
         'title', 'desc', 'type_id', 'cate_id', 'phone', 'region_limit', 'status', 'bounty', 'bounty_status', 'created_at', 'updated_at',
         'verified_at', 'begin_at', 'end_at', 'delivery_deadline', 'show_cash', 'real_cash', 'deposit_cash', 'province', 'city', 'area',
-        'view_count', 'delivery_count', 'uid', 'username', 'worker_num', 'selected_work_at', 'publicity_at', 'checked_at', 'comment_at',
+        'view_count', 'delivery_count', 'uid', 'username', 'avatar', 'worker_num', 'selected_work_at', 'publicity_at', 'checked_at', 'comment_at',
         'top_status','task_success_draw_ratio','task_fail_draw_ratio','engine_status','work_status'
     ];
 
@@ -363,14 +363,13 @@ class TaskModel extends Model
      */
     static function detail($id)
     {
-        $query = self::select('task.*', 'a.name as user_name', 'b.name as type_name', 'c.name as cate_name')
+        $query = self::select('task.*', 'b.name as type_name', 'c.name as cate_name')
             ->where('task.id', '=', $id);
         //赏金已经托管
         $query = $query->where(function ($query) {
             $query->where('task.status', '>=', 2);
         });
-        $data = $query->join('users as a', 'a.id', '=', 'task.uid')
-            ->leftjoin('task_type as b', 'b.id', '=', 'task.type_id')
+        $data = $query->join('task_type as b', 'b.id', '=', 'task.type_id')
             ->leftjoin('cate as c', 'c.id', '=', 'task.cate_id')
             ->first();
         return $data;

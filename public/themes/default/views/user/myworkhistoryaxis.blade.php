@@ -41,7 +41,7 @@
                         <li class="row">
                             <div class="col-md-10 g-userborbtm"></div>
                             <div class="g-reletimeli"><b>{{ date('m-d',strtotime($value['created_at'])) }}</b><span><i></i></span></div>
-                            <div class="col-md-1"><img src="{{ $domain.'/'.$value['avatar'].md5($value['uid'].'large').'.jpg' }}"></div>
+                            <div class="col-md-1"><img src="{{ env('AUATAR_URL') . $value['avatar'].md5($value['uid'].'large').'.jpg' }}"></div>
                             <div class="col-md-11">
                                 <div class="col-md-9">
                                     <div class="text-size14 cor-gray51"><span class="cor-orange">￥{{ $value['bounty'] }}</span> <a href="">{{ $value['task_title'] }}</a> | 投稿中</div>
@@ -49,7 +49,7 @@
                                     <p class="cor-gray87"><i class="ace-icon fa fa-user bigger-110"></i> {{ $value['nickname'] }} <i class="fa fa-eye"></i> {{ $value['view_count'] }}人浏览/{{ $value['delivery_count'] }}人投稿 <i class="fa fa-clock-o"></i> {{ date('d',strtotime(time()-$value['created_at'])) }}天前 <i class="fa fa-unlock-alt"></i>{{ ($value['bounty_status']==1)?'已托管赏金':'待托管赏金' }}</p>
                                     <div class="space-4"></div>
                                     <p class="cor-gray51 p-space">{{ str_limit($value['desc']) }}</p>
-                                    <div class="g-userlabel"><a href="">{{ $value['cate_name'] }}</a><a href="">湖北武汉</a></div>
+                                    <div class="g-userlabel"><a href="">{{ $value['cate_name'] }}</a><a href="">北京市</a></div>
                                 </div>
                                 <div class="col-md-3 text-right"><a class="btn-big bg-blue bor-radius2" href="">查看</a></div>
                             </div>

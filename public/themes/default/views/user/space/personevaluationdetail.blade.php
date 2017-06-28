@@ -15,11 +15,11 @@
                         @if($introduce['avatar']=="")
                         <img src="{!! Theme::asset()->url('images/default_avatar.png') !!}" alt="" class="img-circle personal-info-pic">
                         @else()
-                            <img src="{!!  $domain.'/'.$introduce['avatar'] !!}" class="img-circle personal-info-pic"/>
+                            <img src="{!!  env('AUATAR_URL') . $introduce['avatar'] !!}" class="img-circle personal-info-pic"/>
                         @endif()
                         <div class="personal-info-block">
                             <div class="personal-info-block-name">
-                                <h3>{!!  Auth::user()->name !!}</h3>
+                                <h3>{!!  \Illuminate\Support\Facades\Session::get('AuthUserInfo.nick_name') !!}</h3>
                                 @if($auth_user['bank'] == true)
                                     <span class="bank-attestation"></span>
                                 @else
@@ -32,11 +32,12 @@
                                     <span class="cd-card-attestation-no"></span>
                                 @endif
 
-                                @if(Auth::User()->email_status != 2)
+                               {{-- @if(Auth::User()->email_status != 2)
                                     <span class="email-attestation-no"></span>
                                 @else
                                     <span class="email-attestation"></span>
-                                @endif
+                                @endif--}}
+                                <span class="email-attestation-no"></span>
 
                                 @if($auth_user['alipay'] == true)
                                     <span class="alipay-attestation"></span>

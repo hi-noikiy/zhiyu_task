@@ -86,8 +86,15 @@
         <div class="div-hover hidden-md hidden-sm hidden-xs"></div>
         <ul class="nav navbar-nav topborbtmul topborbtmul-nav nofloat">
             @if(Theme::get('TYPE') == 1)<li class="hidden-sm hActive"> @else <li class="hidden-sm "> @endif<a class="topborbtm" href="/user/index">我的主页</a></li>
-            @if(Theme::get('TYPE') == 2)<li class="hidden-sm hidden-md hActive"> @else <li class="hidden-sm hidden-md"> @endif <a class="topborbtm" href="/user/myTasksList">我是雇主</a></li>
-            @if(Theme::get('TYPE') == 3)<li class="hidden-sm hidden-md hActive"> @else <li class="hidden-sm hidden-md "> @endif <a class="topborbtm" href="/user/acceptTasksList">我是威客</a></li>
+            @if(Theme::get('TYPE') == 2)<li class="hidden-sm hidden-md hActive"> @else <li class="hidden-sm hidden-md"> @endif
+                @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
+                <a class="topborbtm" href="/user/myTasksList">我是雇主</a>
+                @endif
+            </li>
+            @if(Theme::get('TYPE') == 3)<li class="hidden-sm hidden-md hActive"> @else <li class="hidden-sm hidden-md "> @endif
+            @if(!\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
+                <a class="topborbtm" href="/user/acceptTasksList">我是威客</a></li>
+            @endif
             <li class="z-navactive pdtom480">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     更多 <b class="caret"></b>
@@ -104,14 +111,18 @@
                         </a>
                     </li>
                     <li @if(Theme::get('TYPE') == 2) class="visible-sm-block visible-md-block hActive" @else class="visible-sm-block visible-md-block"@endif>
+                        @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                         <a href="{!! url('/user/myTasksList') !!}">
                             我是雇主
                         </a>
+                        @endif
                     </li>
                     <li @if(Theme::get('TYPE') == 3) class="visible-sm-block visible-md-block hActive" @else class="visible-sm-block visible-md-block"@endif>
+                        @if(!\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                         <a href="{!! url('user/acceptTasksList') !!}">
                             我是威客
                         </a>
+                        @endif
                     </li>
                     <li>
                         <a href="{!! url('user/info') !!}">
@@ -145,15 +156,19 @@
                                 {{--<span class="caret"></span>--}}
                             </a>
                             <span class="caret"></span>
+                            @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                             <ul class="dropdown-menu s-listseed dropdown-yellow search-btn-select">
                                 <li><a href="#" id="task">找任务</a></li>
                                 <li><a href="#" id="service">找服务商</a></li>
                             </ul>
+                            @endif
                         </div><!-- /btn-group -->
                         <button class="form-control-feedback fa fa-search s-navfonticon" type="submit"></button><input type="text" name="keywords" class="form-control">
                     </div>
+                    @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
                     <span class="u-tit">或</span>
                     <a href="/task/create" type="submit" class="btn btn-default f-click cor-blue bor-radius2">发布任务</a>
+                    @endif
                 </form>
             </li>
         </ul>

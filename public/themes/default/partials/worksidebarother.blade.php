@@ -20,6 +20,7 @@
                 </div>
             </div>
         </div>
+        @if(\Illuminate\Support\Facades\Session::has('AuthUserInfo.employer'))
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title clearfix">
@@ -51,6 +52,6 @@
                 </div>
             </div>
         </div>
-       
+        @endif
     </div>
 </div>
